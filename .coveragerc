@@ -1,0 +1,5 @@
+[run]
+include = etat_civil/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin

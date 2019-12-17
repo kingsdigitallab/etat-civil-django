@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=etat_civil
+POSTGRES_USER=NSzEmymXMpodGMHvJOBjGtavLXGiChVc
+POSTGRES_PASSWORD=iwukptAk1l6IsulV8iYO5casBAUJewqEzvzuqjkU1dvLQDfbT2VKQX7fL1hC55db
