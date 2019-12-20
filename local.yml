@@ -12,13 +12,14 @@ services:
     image: etat_civil_local_django
     depends_on:
       - postgres
+      - redis
     volumes:
       - .:/app
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - "8000:8000"
+      - '8000:8000'
     command: /start
 
   postgres:
@@ -31,3 +32,17 @@ services:
       - local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
+    ports:
+      - '5432:5432'
+
+  metabase:
+    image: metabase/metabase
+    depends_on:
+      - postgres
+    env_file:
+      - ./.envs/.local/.metabase
+    ports:
+      - 3000:3000
+
+  redis:
+    image: redis:5.0
