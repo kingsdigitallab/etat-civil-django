@@ -1,7 +1,16 @@
 Etat Civil
 ==========
 
-Etat Civil Project Description!
+For the period 1790-1890, France was the only country to keep systematic (tabular) track of their expatriate citizens
+making it possible to study international mobility at scale and in novel ways. The Archives of the French Ministry of
+Foreign Affairs hold 120,000 digitised microfilm images of the records from 215 consulates around the world.
+
+The “Etat Civil” -- standing for civil registration of births, deaths and marriages -- is an exploratory project led by
+Dr David Todd in collaboration with King’s Digital Lab supported by the Faculty of Arts & Humanities, the Department of
+History at King’s College London and the Harvard and Cambridge Centre for History and Economics. The project processes
+data from the Egyptian consulate of the “Etat Civil” to visualise mobility on a continental or global scale and offer
+insights on patterns of migration and social history more in general.
+
 
 .. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
      :target: https://github.com/pydanny/cookiecutter-django/
