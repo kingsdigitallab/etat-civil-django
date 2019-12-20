@@ -1,0 +1,9 @@
+# Metabase
+# ------------------------------------------------------------------------------
+MB_DB_TYPE=postgres
+MB_DB_HOST=postgres
+MB_DB_PORT=5432
+MB_DB_DBNAME=etat_civil
+MB_DB_USER=NSzEmymXMpodGMHvJOBjGtavLXGiChVc
+MB_DB_PASS=iwukptAk1l6IsulV8iYO5casBAUJewqEzvzuqjkU1dvLQDfbT2VKQX7fL1hC55db
+MB_ENCRYPTION_SECRET_KEY=56rltS26gF6XCIGeZxh9yJjazvH7rl8vxZZEifDqrBa1gXmSjV08drOhJQZtLd2Z
