@@ -44,6 +44,21 @@ LOCALE_PATHS = [ROOT_DIR.path("locale")]
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+# CACHES
+# ------------------------------------------------------------------------------
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Mimicing memcache behavior.
+            # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+            "IGNORE_EXCEPTIONS": True,
+        },
+    }
+}
+
 # URLS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -65,15 +80,18 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
+    'django_rq',
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    'geonames_place.apps.GeonamesPlaceConfig',
     "rest_framework",
 ]
 
 LOCAL_APPS = [
     "etat_civil.users.apps.UsersConfig",
     # Your stuff: custom apps go here
+    'etat_civil.deeds.apps.DeedsConfig'
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -263,3 +281,27 @@ SOCIALACCOUNT_ADAPTER = "etat_civil.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# Deeds
+# ------------------------------------------------------------------------------
+DEEDS_INITIAL_DATA = {
+    'DeedType': ['birth', 'death', 'marriage'],
+    'OriginType': ['birth', 'domicile'],
+    'Role': ['father', 'mother', 'bride', 'groom', 'deceased']
+}
+
+# Geonames
+# https://github.com/kingsdigitallab/django-geonames-place
+# ------------------------------------------------------------------------------
+GEONAMES_KEY = env('GEONAMES_KEY')
+GEONAMES_MAX_RESULTS = 1
+
+# Redis Queue
+# https://github.com/rq/django-rq/
+# ------------------------------------------------------------------------------
+RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
+        'DEFAULT_TIMEOUT': 10 * 60
+    }
+}
