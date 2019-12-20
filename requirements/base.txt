@@ -21,5 +21,8 @@ coreapi==2.3.3  # https://github.com/core-api/python-client
 # Etat Civil
 # ------------------------------------------------------------------------------
 git+https://github.com/kingsdigitallab/django-geonames-place.git#egg=django-geonames-place
-# pandas   # is installed with system packages in the Dockerfile
+django-rq
+numpy
+pandas
 unidecode
+xlrd
