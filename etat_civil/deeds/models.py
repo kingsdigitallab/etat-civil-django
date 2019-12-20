@@ -175,8 +175,8 @@ def import_data(data):
 
     locations_df = get_data_sheet(data, 'locations').set_index('display_name')
 
-    # births_df = get_data_sheet(data, 'births')
-    # import_births(data, births_df, locations_df)
+    births_df = get_data_sheet(data, 'births')
+    import_births(data, births_df, locations_df)
 
     marriages_df = get_data_sheet(data, 'marriages')
     import_marriages(data, marriages_df, locations_df)
