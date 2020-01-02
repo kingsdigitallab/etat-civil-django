@@ -214,7 +214,7 @@ class Deed(TimeStampedModel):
 
     @property
     def is_birth_legitimate(self):
-        return self.is_birth and 'legitimate birth: true' in self.notes.lower()
+        return self.is_birth and "legitimate birth: true" in self.notes.lower()
 
     @staticmethod
     def load_birth_deed(data, source, row):
@@ -292,6 +292,7 @@ class Gender(BaseAL):
 class Person(TimeStampedModel):
     name = models.CharField(max_length=128, blank=True, null=True)
     surname = models.CharField(max_length=128, blank=True, null=True)
+    unknown = models.BooleanField(default=False)
     gender = models.ForeignKey(Gender, blank=True, null=True, on_delete=models.CASCADE)
     age = models.PositiveSmallIntegerField(blank=True, null=True)
     birth_year = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -305,13 +306,50 @@ class Person(TimeStampedModel):
     def __str__(self):
         return "{} {}".format(self.name, self.surname)
 
+    @property
+    def birthplace(self):
+        origin_type = OriginType.objects.get(title="birth")
+        origins = self.origin_from.filter(origin_type=origin_type)
+
+        if origins:
+            return origins.first()
+
+        return None
+
+    @property
+    def domicile(self):
+        origin_type = OriginType.objects.get(title="domicile")
+        origins = self.origin_from.filter(origin_type=origin_type).order_by("order")
+
+        if origins:
+            return origins.last()
+
+        return None
+
+    def get_origins(self):
+        origins = ""
+
+        for o in self.origin_from.order_by("order"):
+            origins = "{} {} {}".format(origins, ">" if origins else "", o.place)
+
+        return origins.strip()
+
+    def get_professions(self):
+        professions = []
+
+        for p in self.party_to.all():
+            if p.profession and p.profession.title not in professions:
+                professions.append(p.profession.title)
+
+        return ", ".join(professions)
+
     @staticmethod
     def load_father(data, deed, row):
         if data is None or deed is None or row is None:
             return None
 
-        role = "father"
-        label = f"{role}_"
+        role = Role.get_father()
+        label = "father_"
         gender = Gender.get_m()
 
         return Person.load_person(data, label, gender, role, deed, row)
@@ -371,48 +409,11 @@ class Person(TimeStampedModel):
 
     @staticmethod
     def load_mother(data, deed, row):
-        role = "mother"
-        label = f"{role}_"
+        role = Role.get_mother()
+        label = "mother_"
         gender = Gender.get_f()
 
         return Person.load_person(data, label, gender, role, deed, row)
-
-    @property
-    def birthplace(self):
-        origin_type = OriginType.objects.get(title="birth")
-        origins = self.origin_from.filter(origin_type=origin_type)
-
-        if origins:
-            return origins.first()
-
-        return None
-
-    @property
-    def domicile(self):
-        origin_type = OriginType.objects.get(title="domicile")
-        origins = self.origin_from.filter(origin_type=origin_type).order_by("order")
-
-        if origins:
-            return origins.last()
-
-        return None
-
-    def get_origins(self):
-        origins = ""
-
-        for o in self.origin_from.order_by("order"):
-            origins = "{} {} {}".format(origins, ">" if origins else "", o.place)
-
-        return origins.strip()
-
-    def get_professions(self):
-        professions = []
-
-        for p in self.party_to.all():
-            if p.profession and p.profession.title not in professions:
-                professions.append(p.profession.title)
-
-        return ", ".join(professions)
 
 
 class OriginType(BaseAL):
@@ -527,7 +528,13 @@ class Profession(BaseAL):
 
 
 class Role(BaseAL):
-    pass
+    @staticmethod
+    def get_father():
+        return Role.objects.get(title="father")
+
+    @staticmethod
+    def get_mother():
+        return Role.objects.get(title="mother")
 
 
 class Party(TimeStampedModel):
@@ -544,8 +551,7 @@ class Party(TimeStampedModel):
         verbose_name_plural = "Parties"
 
     @staticmethod
-    def load_party(person, label, role_title, deed, row):
-        role = Role.objects.get(title=role_title)
+    def load_party(person, label, role, deed, row):
         profession = Party.get_profession(label, row)
 
         party, _ = Party.objects.get_or_create(
@@ -604,7 +610,7 @@ class Party(TimeStampedModel):
 #             deed_date = get_deed_date(row)
 #             place = get_place(locations_df, row["deed_location"].strip())
 #             source = import_source(data, row)
-#             import_death_record(deed_type, deed_date, place, source, row, locations_df)
+#           import_death_record(deed_type, deed_date, place, source, row, locations_df)
 #         except Exception as e:  # noqa
 #             print("death", index, e)
 #             continue
