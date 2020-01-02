@@ -9,4 +9,4 @@ REDIS_URL=redis://redis:6379/0
 
 # Geonames
 # ------------------------------------------------------------------------------
-GEONAMES_KEY=demo
+GEONAMES_KEY=kdlinfo
