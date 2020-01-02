@@ -12,6 +12,9 @@ Etat Civil
     :alt: MIT
 .. image:: https://travis-ci.org/kingsdigitallab/etat-civil-django.svg?branch=develop
     :target: https://travis-ci.org/kingsdigitallab/etat-civil-django
+.. image:: https://coveralls.io/repos/github/kingsdigitallab/etat-civil-django/badge.svg?branch=develop
+    :target: https://coveralls.io/github/kingsdigitallab/etat-civil-django?branch=develop
+
 
 
 For the period 1790-1890, France was the only country to keep systematic (tabular) track of their expatriate citizens
