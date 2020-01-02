@@ -1,4 +1,7 @@
-language: pytfgh
+language: python
+
+python:
+  - '3.7'
 
 services:
   - docker
