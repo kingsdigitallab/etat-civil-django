@@ -1,9 +1,6 @@
 services:
   - docker
 
-install:
-  - pip install coveralls django_coverage_plugin
-
 before_script:
   - docker-compose -f local.yml up -d --build
 
