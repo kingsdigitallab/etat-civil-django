@@ -10,4 +10,4 @@ before_install:
   - docker-compose -f local.yml up -d --build
 
 script:
-  - docker-compose run django coverage run -m pytest
+  - docker-compose -f local.yml run django pytest
