@@ -3,7 +3,6 @@ from pathlib import Path
 from etat_civil.deeds.models import Data
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from django.utils.text import slugify
 
 
 class Command(BaseCommand):
