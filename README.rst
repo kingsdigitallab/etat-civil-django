@@ -1,6 +1,19 @@
 Etat Civil
 ==========
 
+.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
+     :target: https://github.com/pydanny/cookiecutter-django/
+     :alt: Built with Cookiecutter Django
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+     :target: https://github.com/ambv/black
+     :alt: Black code style
+.. image:: https://img.shields.io/badge/License-MIT-yellow.svg
+    :target: https://opensource.org/licenses/MIT
+    :alt: MIT
+.. image:: https://travis-ci.org/kingsdigitallab/etat-civil-django.svg?branch=develop
+    :target: https://travis-ci.org/kingsdigitallab/etat-civil-django
+
+
 For the period 1790-1890, France was the only country to keep systematic (tabular) track of their expatriate citizens
 making it possible to study international mobility at scale and in novel ways. The Archives of the French Ministry of
 Foreign Affairs hold 120,000 digitised microfilm images of the records from 215 consulates around the world.
@@ -10,18 +23,6 @@ Dr David Todd in collaboration with King’s Digital Lab supported by the Facult
 History at King’s College London and the Harvard and Cambridge Centre for History and Economics. The project processes
 data from the Egyptian consulate of the “Etat Civil” to visualise mobility on a continental or global scale and offer
 insights on patterns of migration and social history more in general.
-
-
-.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-     :target: https://github.com/ambv/black
-     :alt: Black code style
-
-
-:License: MIT
-
 
 Settings
 --------
