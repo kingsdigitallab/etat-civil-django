@@ -20,9 +20,8 @@ coreapi==2.3.3  # https://github.com/core-api/python-client
 
 # Etat Civil
 # ------------------------------------------------------------------------------
-geocoder
-django-rq
-numpy
-openpyxl
-pandas
-unidecode
+geocoder==1.38.1
+django-rq==2.2.0
+openpyxl==3.0.2
+pandas==0.25.3
+unidecode==1.1.1

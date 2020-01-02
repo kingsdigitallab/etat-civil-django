@@ -30,4 +30,4 @@ pytest-django==3.7.0  # https://github.com/pytest-dev/pytest-django
 
 # Etat Civil
 # ------------------------------------------------------------------------------
-pygraphviz
+pygraphviz==1.5
