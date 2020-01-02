@@ -20,9 +20,9 @@ coreapi==2.3.3  # https://github.com/core-api/python-client
 
 # Etat Civil
 # ------------------------------------------------------------------------------
-git+https://github.com/kingsdigitallab/django-geonames-place.git#egg=django-geonames-place
+geocoder
 django-rq
 numpy
+openpyxl
 pandas
 unidecode
-xlrd
