@@ -306,6 +306,12 @@ class Person(TimeStampedModel):
     def __str__(self):
         return "{} {}".format(self.name, self.surname)
 
+    def save(self, *args, **kwargs):
+        if self.unknown and not self.surname:
+            self.surname = Person.objects.filter(unknown=True).count()
+
+        super().save(*args, **kwargs)
+
     @property
     def birthplace(self):
         origin_type = OriginType.objects.get(title="birth")
@@ -341,6 +347,9 @@ class Person(TimeStampedModel):
             if p.profession and p.profession.title not in professions:
                 professions.append(p.profession.title)
 
+        if len(professions) == 0:
+            return None
+
         return ", ".join(professions)
 
     @staticmethod
@@ -356,8 +365,13 @@ class Person(TimeStampedModel):
 
     @staticmethod
     def load_person(data, label, gender, role, deed, row):
+        unknown = False
+
         name = Person.get_name_field(f"{label}name", row)
         surname = Person.get_name_field(f"{label}surname", row)
+
+        if name == "Unknown":
+            unknown = True
 
         age = Person.get_age(label, row)
         birth_year = None
@@ -367,7 +381,11 @@ class Person(TimeStampedModel):
             birth_year = birth_date.year
 
         person, created = Person.objects.get_or_create(
-            name=name, surname=surname, gender=gender, birth_year=birth_year
+            name=name,
+            surname=surname,
+            unknown=unknown,
+            gender=gender,
+            birth_year=birth_year,
         )
 
         if created:
@@ -383,10 +401,14 @@ class Person(TimeStampedModel):
     @staticmethod
     def get_name_field(field, row):
         name = row[field]
-        if pd.notna(name):
-            return name.strip()
+        if pd.isnull(name):
+            return None
 
-        return None
+        name = name.strip()
+        if "inconnu" in name:
+            return "Unknown"
+
+        return name
 
     @staticmethod
     def get_age(label, row):
@@ -409,6 +431,9 @@ class Person(TimeStampedModel):
 
     @staticmethod
     def load_mother(data, deed, row):
+        if data is None or deed is None or row is None:
+            return None
+
         role = Role.get_mother()
         label = "mother_"
         gender = Gender.get_f()

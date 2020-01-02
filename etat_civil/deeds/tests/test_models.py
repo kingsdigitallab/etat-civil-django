@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from django.utils.dateparse import parse_date
 
-from etat_civil.deeds.models import Data, Deed, DeedType, Person, Source
+from etat_civil.deeds.models import Data, Deed, DeedType, Gender, Person, Role, Source
 
 pytestmark = pytest.mark.django_db
 
@@ -179,14 +179,114 @@ class TestDeed:
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("data", "births_df", "source")
+@pytest.mark.usefixtures("data", "deed", "births_df")
 class TestPerson:
-    # def test_load_father(self, data, deed, births_df):
-    #     pass
+    def test_birthplace(self, data, deed, births_df):
+        gender = Gender.get_f()
+        label = "mother_"
+        role = Role.get_mother()
 
-    def test_get_date_of_birth(self):
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[0])
+        assert person.birthplace is None
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
+        assert person.birthplace.place.address == "Marseille"
+
+    def test_domicile(self, data, deed, births_df):
+        gender = Gender.get_m()
+        label = "father_"
+        role = Role.get_father()
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[1])
+        assert person.domicile.place.address == "Alexandria"
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
+        assert person.domicile.place.address == "Alexandria"
+
+    def test_get_origins(self, data, deed, births_df):
+        gender = Gender.get_m()
+        label = "father_"
+        role = Role.get_father()
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
+        assert "Alexandria" in person.get_origins()
+        assert "Marseille" in person.get_origins()
+
+    def test_get_professions(self, data, deed, births_df):
+        gender = Gender.get_m()
+        label = "father_"
+        role = Role.get_father()
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[0])
+        assert person.get_professions() is None
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[1])
+        assert "Négociant" in person.get_professions()
+
+    def test_load_father(self, data, deed, births_df):
+        row = births_df.iloc[0]
+
+        person = Person.load_father(None, deed, row)
+        assert person is None
+        person = Person.load_father(data, None, row)
+        assert person is None
+        person = Person.load_father(data, deed, None)
+        assert person is None
+
+        person = Person.load_father(data, deed, row)
+        assert person is not None
+        assert person.name == "Louis"
+        assert person.age == 35
+
+    def test_load_person(self, data, deed, births_df):
+        gender = Gender.get_f()
+        label = "mother_"
+        role = Role.get_mother()
+
+        row = births_df.iloc[0]
+        person = Person.load_person(data, label, gender, role, deed, row)
+        assert person is not None
+        assert person.name == "Catherine"
+        assert person.unknown is False
+
+        row = births_df.iloc[8]
+        person = Person.load_person(data, label, gender, role, deed, row)
+        assert person is not None
+        assert person.name == "Unknown"
+        assert person.unknown
+
+    def test_get_name_field(self, births_df):
+        row = births_df.iloc[0]
+        assert Person.get_name_field("father_name", row) == "Louis"
+        assert Person.get_name_field("mother_name", row) == "Catherine"
+
+        row = births_df.iloc[8]
+        assert Person.get_name_field("father_name", row) == "Charles"
+        assert Person.get_name_field("mother_name", row) == "Unknown"
+
+    def test_get_age(self, births_df):
+        row = births_df.iloc[0]
+        assert Person.get_age("father_", row) == 35
+        assert Person.get_age("mother_", row) is None
+
+    def test_get_birth_date(self):
         deed_date = parse_date("1827-12-19")
 
-        assert Person.get_birth_date(None, None) == None
+        assert Person.get_birth_date(None, None) is None
         assert Person.get_birth_date(deed_date, None).year == 1827
         assert Person.get_birth_date(deed_date, 25).year == 1802
+
+    def test_load_mother(self, data, deed, births_df):
+        row = births_df.iloc[0]
+
+        person = Person.load_mother(None, deed, row)
+        assert person is None
+        person = Person.load_mother(data, None, row)
+        assert person is None
+        person = Person.load_mother(data, deed, None)
+        assert person is None
+
+        person = Person.load_mother(data, deed, row)
+        assert person is not None
+        assert person.name == "Catherine"
+        assert person.age is None
