@@ -1,1 +1,1 @@
-default_app_config = 'deeds.apps.DeedsConfig'
+default_app_config = "deeds.apps.DeedsConfig"
