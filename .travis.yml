@@ -1,12 +1,7 @@
-language: python
-
 services:
   - docker
 
-python:
-  - '3.7'
-
-before_install:
+before_script:
   - docker-compose -f local.yml up -d --build
 
 script:
