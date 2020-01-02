@@ -1,8 +1,3 @@
-language: python
-
-python:
-  - '3.7'
-
 services:
   - docker
 
@@ -16,4 +11,4 @@ script:
   - docker-compose -f local.yml run django coverage run -m pytest
 
 after_success:
-  - docker-compose -f local.yml run -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" -e TRAVIS_BRANCH="$TRAVIS_BRANCH" django coveralls
+  - docker-compose -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" -e TRAVIS_BRANCH="$TRAVIS_BRANCH" -e COVERALLS_REPO_TOKEN="$COVERALLS_REPO_TOKEN" -f local.yml run django coveralls
