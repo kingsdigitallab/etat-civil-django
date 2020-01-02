@@ -3,7 +3,7 @@ import pytest
 from django.conf import settings
 from django.test import RequestFactory
 
-from etat_civil.deeds.tests.factories import DataFactory, SourceFactory
+from etat_civil.deeds.tests.factories import DataFactory, DeedFactory, SourceFactory
 from etat_civil.users.tests.factories import UserFactory
 
 
@@ -35,3 +35,8 @@ def births_df() -> pd.DataFrame:
 @pytest.fixture
 def source() -> SourceFactory:
     return SourceFactory()
+
+
+@pytest.fixture
+def deed() -> DeedFactory:
+    return DeedFactory()
