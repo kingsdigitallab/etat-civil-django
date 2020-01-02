@@ -2,7 +2,16 @@ import pandas as pd
 import pytest
 from django.utils.dateparse import parse_date
 
-from etat_civil.deeds.models import Data, Deed, DeedType, Gender, Person, Role, Source
+from etat_civil.deeds.models import (
+    Data,
+    Deed,
+    DeedType,
+    Gender,
+    Person,
+    Role,
+    Source,
+    Origin,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -290,3 +299,28 @@ class TestPerson:
         assert person is not None
         assert person.name == "Catherine"
         assert person.age is None
+
+
+# @pytest.mark.django_db
+@pytest.mark.usefixtures("data", "deed", "person", "births_df")
+class TestOrigin:
+    def test_load_origins(self, data, deed, person, births_df):
+        origins = Origin.load_origins(None, person, "father_", deed, births_df.iloc[0])
+        assert origins is None
+        origins = Origin.load_origins(data, None, "father_", deed, births_df.iloc[0])
+        assert origins is None
+        origins = Origin.load_origins(data, person, None, deed, births_df.iloc[0])
+        assert origins is None
+        origins = Origin.load_origins(data, person, "father_", None, births_df.iloc[0])
+        assert origins is None
+        origins = Origin.load_origins(data, person, "father_", deed, None)
+        assert origins is None
+
+        origins = Origin.load_origins(data, person, "", deed, None)
+        assert len(origins) == 0
+
+        origins = Origin.load_origins(data, person, "father_", deed, births_df.iloc[0])
+        assert len(origins) == 1
+
+        origins = Origin.load_origins(data, person, "father_", deed, births_df.iloc[3])
+        assert len(origins) == 2

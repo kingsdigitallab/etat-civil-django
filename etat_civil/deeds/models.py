@@ -442,7 +442,13 @@ class Person(TimeStampedModel):
 
 
 class OriginType(BaseAL):
-    pass
+    @staticmethod
+    def get_birth():
+        return OriginType.objects.get(title="birth")
+
+    @staticmethod
+    def get_domicile():
+        return OriginType.objects.get(title="domicile")
 
 
 class Origin(TimeStampedModel):
@@ -465,6 +471,15 @@ class Origin(TimeStampedModel):
 
     @staticmethod
     def load_origins(data, person, person_label, deed, row):
+        if (
+            data is None
+            or person is None
+            or person_label is None
+            or deed is None
+            or row is None
+        ):
+            return None
+
         origins = []
 
         address = row[f"{person_label}domicile"]
@@ -473,7 +488,12 @@ class Origin(TimeStampedModel):
 
         origins.append(
             Origin.load_origin(
-                data, person, address, "domicile", origin_date=deed.date, order=5
+                data,
+                person,
+                address,
+                OriginType.get_domicile(),
+                origin_date=deed.date,
+                order=5,
             )
         )
 
@@ -491,7 +511,7 @@ class Origin(TimeStampedModel):
                 data,
                 person,
                 address,
-                "birth",
+                OriginType.get_birth(),
                 origin_date=birth_date,
                 is_date_computed=is_date_computed,
                 order=1,
@@ -509,7 +529,7 @@ class Origin(TimeStampedModel):
                     data,
                     person,
                     address,
-                    "domicile",
+                    OriginType.get_domicile(),
                     origin_date=previous_domicile_date,
                     is_date_computed=is_date_computed,
                     order=3,
@@ -518,7 +538,7 @@ class Origin(TimeStampedModel):
         except KeyError:
             pass
 
-        return filter(lambda o: o is not None, origins)
+        return list(filter(lambda o: o is not None, origins))
 
     @staticmethod
     def load_origin(
@@ -530,22 +550,23 @@ class Origin(TimeStampedModel):
         is_date_computed=False,
         order=99,
     ):
-        if pd.notna(address):
-            place, _ = data.get_place(address)
+        if data is None or person is None or address is None or origin_type is None:
+            return None
 
-            if place:
-                origin_type = OriginType.objects.get(title=origin_type)
-                origin, _ = Origin.objects.get_or_create(
-                    person=person,
-                    place=place,
-                    origin_type=origin_type,
-                    date=origin_date,
-                    is_date_computed=is_date_computed,
-                    order=order,
-                )
-                return origin
+        place, _ = data.get_place(address)
+        if place is None:
+            return None
 
-        return None
+        origin, _ = Origin.objects.get_or_create(
+            person=person,
+            place=place,
+            origin_type=origin_type,
+            date=origin_date,
+            is_date_computed=is_date_computed,
+            order=order,
+        )
+
+        return origin
 
 
 class Profession(BaseAL):

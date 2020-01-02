@@ -2,8 +2,12 @@ import pandas as pd
 import pytest
 from django.conf import settings
 from django.test import RequestFactory
-
-from etat_civil.deeds.tests.factories import DataFactory, DeedFactory, SourceFactory
+from etat_civil.deeds.tests.factories import (
+    DataFactory,
+    DeedFactory,
+    PersonFactory,
+    SourceFactory,
+)
 from etat_civil.users.tests.factories import UserFactory
 
 
@@ -40,3 +44,8 @@ def source() -> SourceFactory:
 @pytest.fixture
 def deed() -> DeedFactory:
     return DeedFactory()
+
+
+@pytest.fixture
+def person() -> PersonFactory:
+    return PersonFactory()

@@ -1,9 +1,9 @@
 import datetime
 
-from factory import DjangoModelFactory, SubFactory
+from factory import DjangoModelFactory, Faker, SubFactory
 from factory.django import FileField
 
-from etat_civil.deeds.models import Data, Deed, DeedType, Source
+from etat_civil.deeds.models import Data, Deed, DeedType, Person, Source
 from etat_civil.geonames_place.models import Place
 
 
@@ -52,3 +52,13 @@ class DeedFactory(DjangoModelFactory):
     class Meta:
         model = Deed
         django_get_or_create = ["deed_type", "n", "date", "place", "source"]
+
+
+class PersonFactory(DjangoModelFactory):
+    name = Faker("name")
+    surname = Faker("name")
+    age = 40
+
+    class Meta:
+        model = Person
+        django_get_or_create = ["name", "surname", "age"]
