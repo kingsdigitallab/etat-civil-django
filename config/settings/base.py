@@ -84,7 +84,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    'geonames_place.apps.GeonamesPlaceConfig',
+    'etat_civil.geonames_place.apps.GeonamesPlaceConfig',
     "rest_framework",
 ]
 
@@ -286,6 +286,7 @@ SOCIALACCOUNT_ADAPTER = "etat_civil.users.adapters.SocialAccountAdapter"
 # ------------------------------------------------------------------------------
 DEEDS_INITIAL_DATA = {
     'DeedType': ['birth', 'death', 'marriage'],
+    'Gender': ['f', 'm'],
     'OriginType': ['birth', 'domicile'],
     'Role': ['father', 'mother', 'bride', 'groom', 'deceased']
 }
