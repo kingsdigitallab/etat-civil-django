@@ -80,18 +80,18 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
-    'django_rq',
+    "django_rq",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    'etat_civil.geonames_place.apps.GeonamesPlaceConfig',
+    "etat_civil.geonames_place.apps.GeonamesPlaceConfig",
     "rest_framework",
 ]
 
 LOCAL_APPS = [
     "etat_civil.users.apps.UsersConfig",
     # Your stuff: custom apps go here
-    'etat_civil.deeds.apps.DeedsConfig'
+    "etat_civil.deeds.apps.DeedsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -128,7 +128,7 @@ PASSWORD_HASHERS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"  # noqa
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
@@ -285,24 +285,19 @@ SOCIALACCOUNT_ADAPTER = "etat_civil.users.adapters.SocialAccountAdapter"
 # Deeds
 # ------------------------------------------------------------------------------
 DEEDS_INITIAL_DATA = {
-    'DeedType': ['birth', 'death', 'marriage'],
-    'Gender': ['f', 'm'],
-    'OriginType': ['birth', 'domicile'],
-    'Role': ['father', 'mother', 'bride', 'groom', 'deceased']
+    "DeedType": ["birth", "death", "marriage"],
+    "Gender": ["f", "m"],
+    "OriginType": ["birth", "domicile"],
+    "Role": ["father", "mother", "bride", "groom", "deceased"],
 }
 
 # Geonames
 # https://github.com/kingsdigitallab/django-geonames-place
 # ------------------------------------------------------------------------------
-GEONAMES_KEY = env('GEONAMES_KEY')
+GEONAMES_KEY = env("GEONAMES_KEY")
 GEONAMES_MAX_RESULTS = 1
 
 # Redis Queue
 # https://github.com/rq/django-rq/
 # ------------------------------------------------------------------------------
-RQ_QUEUES = {
-    'default': {
-        'USE_REDIS_CACHE': 'default',
-        'DEFAULT_TIMEOUT': 10 * 60
-    }
-}
+RQ_QUEUES = {"default": {"USE_REDIS_CACHE": "default", "DEFAULT_TIMEOUT": 10 * 60}}
