@@ -44,7 +44,13 @@ class DeedAdmin(admin.ModelAdmin):
     inlines = [PartyInline]
     list_display = ["n", "date", "deed_type", "place", "source"]
     list_filter = ["deed_type", "place"]
-    search_fields = ["n", "date", "deed_type", "place", "source"]
+    search_fields = [
+        "n",
+        "date__year",
+        "deed_type__title",
+        "place__address",
+        "source__classmark",
+    ]
 
 
 @admin.register(DeedType)
