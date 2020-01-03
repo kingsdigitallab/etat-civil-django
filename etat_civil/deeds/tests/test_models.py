@@ -12,6 +12,7 @@ from etat_civil.deeds.models import (
     Source,
     Origin,
     OriginType,
+    Party,
 )
 
 pytestmark = pytest.mark.django_db
@@ -302,7 +303,6 @@ class TestPerson:
         assert person.age is None
 
 
-# @pytest.mark.django_db
 @pytest.mark.usefixtures("data", "deed", "person", "births_df")
 class TestOrigin:
     def test_load_origins(self, data, deed, person, births_df):
@@ -344,3 +344,36 @@ class TestOrigin:
         origin = Origin.load_origin(data, person, address, origin_type)
         assert origin is not None
         assert origin.place.address == "Alexandria"
+
+
+@pytest.mark.django_db
+@pytest.mark.usefixtures("data", "deed", "person", "births_df")
+class TestParty:
+    def test_load_party(self, data, deed, person, births_df):
+        role = Role.get_mother()
+        row = births_df.iloc[0]
+
+        party = Party.load_party(None, "mother_", role, deed, row)
+        assert party is None
+        party = Party.load_party(person, None, role, deed, row)
+        assert party is None
+        party = Party.load_party(person, "mother_", None, deed, row)
+        assert party is None
+        party = Party.load_party(person, "mother_", role, None, row)
+        assert party is None
+
+        party = Party.load_party(person, "mother_", role, deed, row)
+        assert party is not None
+        assert party.profession is None
+
+        role = Role.get_father()
+        row = births_df.iloc[7]
+
+        party = Party.load_party(person, "father_", role, deed, row)
+        assert party is not None
+        assert party.profession.title == "Cafetier"
+
+    def test_get_profession(self, births_df):
+        assert Party.get_profession(None, None) is None
+        assert Party.get_profession("mother_", births_df.iloc[0]) is None
+        assert Party.get_profession("father_", births_df.iloc[7]).title == "Cafetier"

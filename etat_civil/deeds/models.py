@@ -596,6 +596,9 @@ class Party(TimeStampedModel):
 
     @staticmethod
     def load_party(person, label, role, deed, row):
+        if person is None or label is None or role is None or deed is None:
+            return None
+
         profession = Party.get_profession(label, row)
 
         party, _ = Party.objects.get_or_create(
@@ -606,13 +609,16 @@ class Party(TimeStampedModel):
 
     @staticmethod
     def get_profession(label, row):
+        if label is None or row is None:
+            return None
+
         title = row[f"{label}profession"]
 
-        if pd.notnull(title):
-            profession, _ = Profession.objects.get_or_create(title=title.strip())
-            return profession
+        if pd.isnull(title):
+            return None
 
-        return None
+        profession, _ = Profession.objects.get_or_create(title=title.strip())
+        return profession
 
 
 # def import_marriages(data, marriages_df, locations_df):
