@@ -4,7 +4,7 @@ from pathlib import Path
 
 from django.core.management.base import BaseCommand
 from etat_civil.deeds.models import Person
-from geonames_place.models import Place
+from etat_civil.geonames_place.models import Place
 
 
 class Command(BaseCommand):
