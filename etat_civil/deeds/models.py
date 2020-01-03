@@ -665,16 +665,14 @@ class Origin(TimeStampedModel):
             )
         )
 
-        if person.age:
-            birth_date = Person.get_birth_date(deed.date, person.age)
-        else:
-            birth_date = Person.get_birth_date(deed.date, person.age)
+        birth_date = Person.get_birth_date(deed.date, person.age)
+
+        is_date_computed = False
+        if not person.age:
             is_date_computed = True
 
         address = row.get(f"{person_label}birth_location")
         if pd.notnull(address):
-            is_date_computed = False
-
             origins.append(
                 Origin.load_origin(
                     data,
