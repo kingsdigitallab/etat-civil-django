@@ -1,11 +1,9 @@
 import csv
 import os
-from collections import defaultdict
-from datetime import datetime
 from pathlib import Path
 
-from deeds.models import Person
 from django.core.management.base import BaseCommand
+from etat_civil.deeds.models import Person
 from geonames_place.models import Place
 
 

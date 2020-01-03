@@ -72,7 +72,14 @@ class OriginInline(admin.TabularInline):
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     inlines = [OriginInline, PartyInline]
-    list_display = ["name", "surname", "gender", "age", "birth_year", "get_origins"]
+    list_display = [
+        "name",
+        "surname",
+        "gender",
+        "age",
+        "birth_year",
+        "get_origin_names",
+    ]
     list_display_links = list_display
     list_filter = ["gender", "age", "surname"]
     search_fields = ["name", "surname"]

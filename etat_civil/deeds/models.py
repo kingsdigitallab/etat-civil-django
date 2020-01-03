@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import pandas as pd
 from django.core.validators import FileExtensionValidator
@@ -49,10 +49,10 @@ class Data(TimeStampedModel):
         births_df = self.get_data_sheet("births")
         self.load_births(births_df)
 
-        marriages_df = self.get_data_sheet('marriages')
+        marriages_df = self.get_data_sheet("marriages")
         self.load_marriages(marriages_df)
 
-        deaths_df = self.get_data_sheet('deaths')
+        deaths_df = self.get_data_sheet("deaths")
         self.load_deaths(deaths_df)
 
         return True
@@ -370,6 +370,16 @@ class Person(TimeStampedModel):
         super().save(*args, **kwargs)
 
     @property
+    def fullname(self):
+        fullname = ""
+
+        for n in [self.name, self.surname]:
+            if n:
+                fullname = f"{fullname} {n}"
+
+        return fullname.strip()
+
+    @property
     def birthplace(self):
         origin_type = OriginType.objects.get(title="birth")
         origins = self.origin_from.filter(origin_type=origin_type)
@@ -389,11 +399,14 @@ class Person(TimeStampedModel):
 
         return None
 
-    def get_origins(self):
+    def get_origin_names(self):
         origins = ""
 
-        for o in self.origin_from.order_by("order"):
-            origins = "{} {} {}".format(origins, ">" if origins else "", o.place)
+        place = None
+        for origin in self.origin_from.order_by("date"):
+            if origin.place != place:
+                place = origin.place
+                origins = f"{origins} -> {place}"
 
         return origins.strip()
 
@@ -408,6 +421,55 @@ class Person(TimeStampedModel):
             return None
 
         return ", ".join(professions)
+
+    def to_geojson(self):
+        geojson = {}
+
+        if self.origin_from.count() == 0:
+            return geojson
+
+        geojson["type"] = "Feature"
+
+        geometry = {}
+        geometry["type"] = "LineString"
+
+        coords = []
+        properties = {}
+
+        properties["id"] = self.id
+        properties["name"] = self.fullname
+        properties["unknown"] = self.unknown
+        properties["origins"] = self.get_origin_names()
+
+        if self.age:
+            properties["age"] = self.age
+
+        if self.gender:
+            properties["gender"] = self.gender.title
+
+        prev_place = None
+        origins = self.origin_from.order_by("date")
+        for idx, origin in enumerate(origins):
+            if idx == 0 or idx == origins.count() - 1:
+                pos = "first" if idx == 0 else "last"
+
+                origin_geojson = origin.to_geojson(label=f"origin_{pos}")
+                if origin_geojson:
+                    properties.update(origin_geojson)
+
+            if origin.place != prev_place:
+                ts = datetime.fromordinal(origin.date.toordinal()).timestamp()
+                coords.append(
+                    [float(origin.place.lon), float(origin.place.lat), 0, int(ts)]
+                )
+
+            prev_place = origin.place
+
+        geojson["properties"] = properties
+        geometry["coordinates"] = coords
+        geojson["geometry"] = geometry
+
+        return geojson
 
     @staticmethod
     def load_father(data, deed, row):
@@ -562,6 +624,18 @@ class Origin(TimeStampedModel):
 
     def __str__(self):
         return "{}: {}".format(self.origin_type, self.place)
+
+    def to_geojson(self, label="origin"):
+        geojson = {}
+
+        geojson[f"{label}_type"] = self.origin_type.title
+        geojson[f"{label}_place"] = self.place.address
+        geojson[f"{label}_lat"] = float(self.place.lat)
+        geojson[f"{label}_lon"] = float(self.place.lon)
+        geojson[f"{label}_date"] = f"{self.date} 00:00"
+        geojson[f"{label}_is_date_computed"] = self.is_date_computed
+
+        return geojson
 
     @staticmethod
     def load_origins(data, person, person_label, deed, row):

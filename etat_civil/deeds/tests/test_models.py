@@ -242,6 +242,19 @@ class TestDeed:
 @pytest.mark.django_db
 @pytest.mark.usefixtures("data", "deed", "births_df", "marriages_df", "deaths_df")
 class TestPerson:
+    def test_fullname(self):
+        person = Person(name='Jack', surname='Todd')
+        assert person.fullname == 'Jack Todd'
+
+        person = Person(name='Jack', surname=None)
+        assert person.fullname == 'Jack'
+
+        person = Person(name=None, surname='Todd')
+        assert person.fullname == 'Todd'
+
+        person = Person(name=None, surname=None)
+        assert person.fullname == ''
+
     def test_birthplace(self, data, deed, births_df):
         gender = Gender.get_f()
         label = "mother_"
@@ -264,14 +277,14 @@ class TestPerson:
         person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
         assert person.domicile.place.address == "Alexandria"
 
-    def test_get_origins(self, data, deed, births_df):
+    def test_get_origin_names(self, data, deed, births_df):
         gender = Gender.get_m()
         label = "father_"
         role = Role.get_father()
 
         person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
-        assert "Alexandria" in person.get_origins()
-        assert "Marseille" in person.get_origins()
+        assert "Alexandria" in person.get_origin_names()
+        assert "Marseille" in person.get_origin_names()
 
     def test_get_professions(self, data, deed, births_df):
         gender = Gender.get_m()
@@ -283,6 +296,16 @@ class TestPerson:
 
         person = Person.load_person(data, label, gender, role, deed, births_df.iloc[1])
         assert "Négociant" in person.get_professions()
+
+    def test_to_geojson(self, data, deed, marriages_df):
+        person = Person(name='Jack', surname='Todd')
+        assert person.to_geojson() == {}
+
+        person = Person.load_groom(data, deed, marriages_df.iloc[7])
+        geojson = person.to_geojson()
+        assert 'properties' in geojson
+        assert geojson['properties']['name'] == "Pierre Honoré Louis Beraud"
+        assert len(geojson['geometry']['coordinates']) > 1
 
     def test_load_father(self, data, deed, births_df):
         row = births_df.iloc[0]
@@ -449,6 +472,19 @@ class TestOrigin:
         origin = Origin.load_origin(data, person, address, origin_type)
         assert origin is not None
         assert origin.place.address == "Alexandria"
+
+    def test_to_geojson(self, data, deed, person, births_df):
+        origin_type = OriginType.get_birth()
+
+        origin = Origin.load_origin(data, person, "0051: Alexandrie", origin_type)
+
+        geojson = origin.to_geojson()
+        assert 'origin_place' in geojson
+        assert geojson['origin_place'] == 'Alexandria'
+
+        geojson = origin.to_geojson(label='origin_first')
+        assert 'origin_first_place' in geojson
+        assert geojson['origin_first_place'] == 'Alexandria'
 
 
 @pytest.mark.django_db
