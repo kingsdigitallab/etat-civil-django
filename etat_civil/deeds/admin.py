@@ -88,7 +88,7 @@ class PersonAdmin(admin.ModelAdmin):
     ]
     list_display_links = list_display
     list_filter = ["gender", "age", "surname"]
-    search_fields = ["name", "surname"]
+    search_fields = ["name", "surname", "origin_from__place__address"]
 
 
 @admin.register(Origin)
