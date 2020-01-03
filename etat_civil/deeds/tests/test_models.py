@@ -61,6 +61,17 @@ class TestData:
         deed_type = DeedType.get_birth()
         assert Deed.objects.filter(deed_type=deed_type).count() == 9
 
+    def test_load_marriages(self, data):
+        loaded = data.load_marriages(None)
+        assert loaded is False
+
+        df = data.get_data_sheet("marriages")
+        loaded = data.load_marriages(df)
+        assert loaded is True
+
+        deed_type = DeedType.get_marriage()
+        assert Deed.objects.filter(deed_type=deed_type).count() == 9
+
     def test_get_place(self, data):
         locations_df = pd.DataFrame(
             {
@@ -133,7 +144,7 @@ class TestDeedType:
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("data", "births_df", "source")
+@pytest.mark.usefixtures("data", "births_df", "marriages_df", "source")
 class TestDeed:
     def test_is_birth(self, data, births_df, source):
         deed = Deed.load_birth_deed(data, source, births_df.iloc[0])
@@ -188,9 +199,23 @@ class TestDeed:
         assert n is not None
         assert "true" in n.lower()
 
+    def test_load_marriage_deed(self, data, marriages_df, source):
+        row = marriages_df.iloc[1]
+
+        deed = Deed.load_marriage_deed(None, source, row)
+        assert deed is None
+        deed = Deed.load_marriage_deed(data, None, row)
+        assert deed is None
+        deed = Deed.load_marriage_deed(data, source, None)
+        assert deed is None
+
+        deed = Deed.load_marriage_deed(data, source, row)
+        assert deed is not None
+        assert deed.n == 1190
+
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("data", "deed", "births_df")
+@pytest.mark.usefixtures("data", "deed", "births_df", "marriages_df")
 class TestPerson:
     def test_birthplace(self, data, deed, births_df):
         gender = Gender.get_f()
@@ -301,6 +326,46 @@ class TestPerson:
         assert person is not None
         assert person.name == "Catherine"
         assert person.age is None
+
+    def test_load_groom(self, data, deed, marriages_df):
+        row = marriages_df.iloc[0]
+
+        person = Person.load_groom(None, deed, row)
+        assert person is None
+        person = Person.load_groom(data, None, row)
+        assert person is None
+        person = Person.load_groom(data, deed, None)
+        assert person is None
+
+        person = Person.load_groom(data, deed, row)
+        assert person is not None
+        assert person.name == "Jean Joseph"
+        assert person.age is None
+
+        person = Person.load_groom(data, deed, marriages_df.iloc[1])
+        assert person is not None
+        assert person.name == "Gilbert Martial"
+        assert person.age == 32
+
+    def test_load_bride(self, data, deed, marriages_df):
+        row = marriages_df.iloc[0]
+
+        person = Person.load_bride(None, deed, row)
+        assert person is None
+        person = Person.load_bride(data, None, row)
+        assert person is None
+        person = Person.load_bride(data, deed, None)
+        assert person is None
+
+        person = Person.load_bride(data, deed, row)
+        assert person is not None
+        assert person.name == "Rose Marguerite"
+        assert person.age is None
+
+        person = Person.load_bride(data, deed, marriages_df.iloc[1])
+        assert person is not None
+        assert person.name == "Marie"
+        assert person.age == 25
 
 
 @pytest.mark.usefixtures("data", "deed", "person", "births_df")

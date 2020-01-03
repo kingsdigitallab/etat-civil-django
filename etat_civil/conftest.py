@@ -37,6 +37,13 @@ def births_df() -> pd.DataFrame:
 
 
 @pytest.fixture
+def marriages_df() -> pd.DataFrame:
+    return pd.read_excel(
+        "data/raw/test.xlsx", engine="openpyxl", sheet_name="marriages"
+    )
+
+
+@pytest.fixture
 def source() -> SourceFactory:
     return SourceFactory()
 

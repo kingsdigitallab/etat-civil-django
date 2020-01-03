@@ -49,8 +49,8 @@ class Data(TimeStampedModel):
         births_df = self.get_data_sheet("births")
         self.load_births(births_df)
 
-        # marriages_df = self.get_data_sheet('marriages')
-        # import_marriages(data, marriages_df, locations_df)
+        marriages_df = self.get_data_sheet('marriages')
+        self.load_marriages(marriages_df)
 
         # deaths_df = self.get_data_sheet('deaths')
         # import_deaths(data, deaths_df, locations_df)
@@ -79,22 +79,27 @@ class Data(TimeStampedModel):
         return df
 
     def load_births(self, births_df):
-        if births_df is None:
+        return self.load_deed(births_df, Deed.load_birth_deed)
+
+    def load_deed(self, df, load_func):
+        if df is None:
             return False
 
-        for index, row in births_df.iterrows():
+        for index, row in df.iterrows():
             try:
                 source = Source.load_source(
                     self, row["classmark"], row["classmark_microfilm"]
                 )
                 if source:
-                    Deed.load_birth_deed(self, source, row)
+                    load_func(self, source, row)
             except Exception as e:  # noqa
-                print("birth", index, e)
-                # skips the row
+                print(load_func, index, e)
                 continue
 
         return True
+
+    def load_marriages(self, marriages_df):
+        return self.load_deed(marriages_df, Deed.load_marriage_deed)
 
     def get_place(self, name):
         """Returns a geonames place and a return code, and updates the internal
@@ -278,6 +283,31 @@ class Deed(TimeStampedModel):
 
         return notes
 
+    @staticmethod
+    def load_marriage_deed(data, source, row):
+        if data is None or source is None or row is None:
+            return None
+
+        deed_type = DeedType.get_marriage()
+        deed_n = Deed.get_deed_n(row)
+        deed_date = Deed.get_deed_date(row)
+        deed_place, _ = data.get_place(row["deed_location"])
+        deed_notes = Deed.get_deed_notes(row)
+
+        deed, _ = Deed.objects.get_or_create(
+            deed_type=deed_type,
+            n=deed_n,
+            date=deed_date,
+            place=deed_place,
+            source=source,
+            notes=deed_notes,
+        )
+
+        Person.load_groom(data, deed, row)
+        Person.load_bride(data, deed, row)
+
+        return deed
+
 
 class Gender(BaseAL):
     @staticmethod
@@ -440,6 +470,28 @@ class Person(TimeStampedModel):
 
         return Person.load_person(data, label, gender, role, deed, row)
 
+    @staticmethod
+    def load_groom(data, deed, row):
+        if data is None or deed is None or row is None:
+            return None
+
+        role = Role.get_groom()
+        label = "groom_"
+        gender = Gender.get_m()
+
+        return Person.load_person(data, label, gender, role, deed, row)
+
+    @staticmethod
+    def load_bride(data, deed, row):
+        if data is None or deed is None or row is None:
+            return None
+
+        role = Role.get_bride()
+        label = "bride_"
+        gender = Gender.get_f()
+
+        return Person.load_person(data, label, gender, role, deed, row)
+
 
 class OriginType(BaseAL):
     @staticmethod
@@ -580,6 +632,14 @@ class Role(BaseAL):
     def get_mother():
         return Role.objects.get(title="mother")
 
+    @staticmethod
+    def get_groom():
+        return Role.objects.get(title="groom")
+
+    @staticmethod
+    def get_bride():
+        return Role.objects.get(title="bride")
+
 
 class Party(TimeStampedModel):
     deed = models.ForeignKey(Deed, on_delete=models.CASCADE)
@@ -620,36 +680,6 @@ class Party(TimeStampedModel):
         profession, _ = Profession.objects.get_or_create(title=title.strip())
         return profession
 
-
-# def import_marriages(data, marriages_df, locations_df):
-#     deed_type = DeedType.objects.get(title="marriage")
-
-#     for index, row in marriages_df.iterrows():
-#         try:
-#             deed_date = get_deed_date(row)
-#             place = get_place(locations_df, row["deed_location"].strip())
-#             source = import_source(data, row)
-#             import_marriage_record(
-#                 deed_type, deed_date, place, source, row, locations_df
-#             )
-#         except Exception as e:  # noqa
-#             print("marriage", index, e)
-#             # skips the row
-#             continue
-
-
-# def import_marriage_record(deed_type, deed_date, place, source, record, locations_df):
-#     deed = import_deed(deed_type, deed_date, place, source, record)
-
-#     gender, _ = Gender.objects.get_or_create(title="m")
-#     groom = import_person("groom_", gender, deed_date, record, locations_df)
-#     role = Role.objects.get(title="groom")
-#     add_party(deed, groom, role, "groom_", record)
-
-#     gender, _ = Gender.objects.get_or_create(title="f")
-#     bride = import_person("bride_", gender, deed_date, record, locations_df)
-#     role = Role.objects.get(title="bride")
-#     add_party(deed, bride, role, "bride_", record)
 
 
 # def import_deaths(data, deaths_df, locations_df):
