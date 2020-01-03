@@ -37,6 +37,11 @@ def births_df() -> pd.DataFrame:
 
 
 @pytest.fixture
+def deaths_df() -> pd.DataFrame:
+    return pd.read_excel("data/raw/test.xlsx", engine="openpyxl", sheet_name="deaths")
+
+
+@pytest.fixture
 def marriages_df() -> pd.DataFrame:
     return pd.read_excel(
         "data/raw/test.xlsx", engine="openpyxl", sheet_name="marriages"

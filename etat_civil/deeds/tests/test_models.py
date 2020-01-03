@@ -72,6 +72,17 @@ class TestData:
         deed_type = DeedType.get_marriage()
         assert Deed.objects.filter(deed_type=deed_type).count() == 9
 
+    def test_load_deaths(self, data):
+        loaded = data.load_deaths(None)
+        assert loaded is False
+
+        df = data.get_data_sheet("deaths")
+        loaded = data.load_deaths(df)
+        assert loaded is True
+
+        deed_type = DeedType.get_death()
+        assert Deed.objects.filter(deed_type=deed_type).count() == 9
+
     def test_get_place(self, data):
         locations_df = pd.DataFrame(
             {
@@ -144,7 +155,7 @@ class TestDeedType:
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("data", "births_df", "marriages_df", "source")
+@pytest.mark.usefixtures("data", "births_df", "marriages_df", "deaths_df", "source")
 class TestDeed:
     def test_is_birth(self, data, births_df, source):
         deed = Deed.load_birth_deed(data, source, births_df.iloc[0])
@@ -213,9 +224,23 @@ class TestDeed:
         assert deed is not None
         assert deed.n == 1190
 
+    def test_load_death_deed(self, data, deaths_df, source):
+        row = deaths_df.iloc[0]
+
+        deed = Deed.load_death_deed(None, source, row)
+        assert deed is None
+        deed = Deed.load_death_deed(data, None, row)
+        assert deed is None
+        deed = Deed.load_death_deed(data, source, None)
+        assert deed is None
+
+        deed = Deed.load_death_deed(data, source, row)
+        assert deed is not None
+        assert deed.n == 6
+
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("data", "deed", "births_df", "marriages_df")
+@pytest.mark.usefixtures("data", "deed", "births_df", "marriages_df", "deaths_df")
 class TestPerson:
     def test_birthplace(self, data, deed, births_df):
         gender = Gender.get_f()
@@ -366,6 +391,21 @@ class TestPerson:
         assert person is not None
         assert person.name == "Marie"
         assert person.age == 25
+
+    def test_load_deceased(self, data, deed, deaths_df):
+        row = deaths_df.iloc[0]
+
+        person = Person.load_deceased(None, deed, row)
+        assert person is None
+        person = Person.load_deceased(data, None, row)
+        assert person is None
+        person = Person.load_deceased(data, deed, None)
+        assert person is None
+
+        person = Person.load_deceased(data, deed, row)
+        assert person is not None
+        assert person.name == "Bernard"
+        assert person.age == 20
 
 
 @pytest.mark.usefixtures("data", "deed", "person", "births_df")

@@ -52,8 +52,8 @@ class Data(TimeStampedModel):
         marriages_df = self.get_data_sheet('marriages')
         self.load_marriages(marriages_df)
 
-        # deaths_df = self.get_data_sheet('deaths')
-        # import_deaths(data, deaths_df, locations_df)
+        deaths_df = self.get_data_sheet('deaths')
+        self.load_deaths(deaths_df)
 
         return True
 
@@ -100,6 +100,9 @@ class Data(TimeStampedModel):
 
     def load_marriages(self, marriages_df):
         return self.load_deed(marriages_df, Deed.load_marriage_deed)
+
+    def load_deaths(self, deaths_df):
+        return self.load_deed(deaths_df, Deed.load_death_deed)
 
     def get_place(self, name):
         """Returns a geonames place and a return code, and updates the internal
@@ -308,6 +311,30 @@ class Deed(TimeStampedModel):
 
         return deed
 
+    @staticmethod
+    def load_death_deed(data, source, row):
+        if data is None or source is None or row is None:
+            return None
+
+        deed_type = DeedType.get_death()
+        deed_n = Deed.get_deed_n(row)
+        deed_date = Deed.get_deed_date(row)
+        deed_place, _ = data.get_place(row["deed_location"])
+        deed_notes = Deed.get_deed_notes(row)
+
+        deed, _ = Deed.objects.get_or_create(
+            deed_type=deed_type,
+            n=deed_n,
+            date=deed_date,
+            place=deed_place,
+            source=source,
+            notes=deed_notes,
+        )
+
+        Person.load_deceased(data, deed, row)
+
+        return deed
+
 
 class Gender(BaseAL):
     @staticmethod
@@ -492,6 +519,17 @@ class Person(TimeStampedModel):
 
         return Person.load_person(data, label, gender, role, deed, row)
 
+    @staticmethod
+    def load_deceased(data, deed, row):
+        if data is None or deed is None or row is None:
+            return None
+
+        role = Role.get_deceased()
+        label = ""
+        gender = None
+
+        return Person.load_person(data, label, gender, role, deed, row)
+
 
 class OriginType(BaseAL):
     @staticmethod
@@ -640,6 +678,10 @@ class Role(BaseAL):
     def get_bride():
         return Role.objects.get(title="bride")
 
+    @staticmethod
+    def get_deceased():
+        return Role.objects.get(title="deceased")
+
 
 class Party(TimeStampedModel):
     deed = models.ForeignKey(Deed, on_delete=models.CASCADE)
@@ -679,26 +721,3 @@ class Party(TimeStampedModel):
 
         profession, _ = Profession.objects.get_or_create(title=title.strip())
         return profession
-
-
-
-# def import_deaths(data, deaths_df, locations_df):
-#     deed_type = DeedType.objects.get(title="death")
-
-#     for index, row in deaths_df.iterrows():
-#         try:
-#             deed_date = get_deed_date(row)
-#             place = get_place(locations_df, row["deed_location"].strip())
-#             source = import_source(data, row)
-#           import_death_record(deed_type, deed_date, place, source, row, locations_df)
-#         except Exception as e:  # noqa
-#             print("death", index, e)
-#             continue
-
-
-# def import_death_record(deed_type, deed_date, place, source, record, locations_df):
-#     deed = import_deed(deed_type, deed_date, place, source, record)
-
-#     deceased = import_person("", None, deed_date, record, locations_df)
-#     role = Role.objects.get(title="deceased")
-#     add_party(deed, deceased, role, "", record)
