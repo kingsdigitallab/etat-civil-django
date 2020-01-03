@@ -470,8 +470,12 @@ class Person(TimeStampedModel):
     @staticmethod
     def get_age(label, row):
         age = row[f"{label}age"]
-        if pd.notnull(age):
-            return int(age)
+
+        try:
+            if pd.notnull(age):
+                return int(age)
+        except ValueError:
+            return None
 
         return None
 
@@ -587,15 +591,15 @@ class Origin(TimeStampedModel):
             )
         )
 
+        if person.age:
+            birth_date = Person.get_birth_date(deed.date, person.age)
+        else:
+            birth_date = Person.get_birth_date(deed.date, person.age)
+            is_date_computed = True
+
         address = row.get(f"{person_label}birth_location")
         if pd.notnull(address):
             is_date_computed = False
-
-            if person.age:
-                birth_date = Person.get_birth_date(deed.date, person.age)
-            else:
-                birth_date = Person.get_birth_date(deed.date, person.age)
-                is_date_computed = True
 
             origins.append(
                 Origin.load_origin(
