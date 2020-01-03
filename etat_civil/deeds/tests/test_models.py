@@ -11,6 +11,7 @@ from etat_civil.deeds.models import (
     Role,
     Source,
     Origin,
+    OriginType,
 )
 
 pytestmark = pytest.mark.django_db
@@ -305,22 +306,41 @@ class TestPerson:
 @pytest.mark.usefixtures("data", "deed", "person", "births_df")
 class TestOrigin:
     def test_load_origins(self, data, deed, person, births_df):
-        origins = Origin.load_origins(None, person, "father_", deed, births_df.iloc[0])
+        row = births_df.iloc[0]
+
+        origins = Origin.load_origins(None, person, "father_", deed, row)
         assert origins is None
-        origins = Origin.load_origins(data, None, "father_", deed, births_df.iloc[0])
+        origins = Origin.load_origins(data, None, "father_", deed, row)
         assert origins is None
-        origins = Origin.load_origins(data, person, None, deed, births_df.iloc[0])
+        origins = Origin.load_origins(data, person, None, deed, row)
         assert origins is None
-        origins = Origin.load_origins(data, person, "father_", None, births_df.iloc[0])
+        origins = Origin.load_origins(data, person, "father_", None, row)
         assert origins is None
         origins = Origin.load_origins(data, person, "father_", deed, None)
         assert origins is None
 
-        origins = Origin.load_origins(data, person, "", deed, None)
-        assert len(origins) == 0
+        origins = Origin.load_origins(data, person, "", deed, row)
+        assert len(origins) == 1
 
-        origins = Origin.load_origins(data, person, "father_", deed, births_df.iloc[0])
+        origins = Origin.load_origins(data, person, "father_", deed, row)
         assert len(origins) == 1
 
         origins = Origin.load_origins(data, person, "father_", deed, births_df.iloc[3])
         assert len(origins) == 2
+
+    def test_load_origin(self, data, deed, person, births_df):
+        address = "0051: Alexandrie"
+        origin_type = OriginType.get_birth()
+
+        origin = Origin.load_origin(None, person, address, origin_type)
+        assert origin is None
+        origin = Origin.load_origin(data, None, address, origin_type)
+        assert origin is None
+        origin = Origin.load_origin(data, person, None, origin_type)
+        assert origin is None
+        origin = Origin.load_origin(data, person, address, None)
+        assert origin is None
+
+        origin = Origin.load_origin(data, person, address, origin_type)
+        assert origin is not None
+        assert origin.place.address == "Alexandria"

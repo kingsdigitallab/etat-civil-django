@@ -114,7 +114,7 @@ class Data(TimeStampedModel):
             location = self.locations_df.loc[name]
             geonames_id = location["geonames_id"]
 
-            if pd.notna(geonames_id):
+            if pd.notnull(geonames_id):
                 place, created = Place.objects.get_or_create(
                     geonames_id=int(geonames_id)
                 )
@@ -155,12 +155,12 @@ class Source(TimeStampedModel):
 
     @staticmethod
     def load_source(data, classmark, microfilm):
-        if pd.notna(classmark):
+        if pd.notnull(classmark):
             classmark = classmark.strip()
         else:
             return None
 
-        if pd.notna(microfilm):
+        if pd.notnull(microfilm):
             microfilm = microfilm.strip()
         else:
             return None
@@ -413,7 +413,7 @@ class Person(TimeStampedModel):
     @staticmethod
     def get_age(label, row):
         age = row[f"{label}age"]
-        if pd.notna(age):
+        if pd.notnull(age):
             return int(age)
 
         return None
@@ -482,8 +482,8 @@ class Origin(TimeStampedModel):
 
         origins = []
 
-        address = row[f"{person_label}domicile"]
-        if pd.isna(address):
+        address = row.get(f"{person_label}domicile")
+        if pd.isnull(address):
             address = deed.place.address
 
         origins.append(
@@ -497,30 +497,30 @@ class Origin(TimeStampedModel):
             )
         )
 
-        address = row[f"{person_label}birth_location"]
-        is_date_computed = False
+        address = row.get(f"{person_label}birth_location")
+        if pd.notnull(address):
+            is_date_computed = False
 
-        if person.age:
-            birth_date = Person.get_birth_date(deed.date, person.age)
-        else:
-            birth_date = Person.get_birth_date(deed.date, person.age)
-            is_date_computed = True
+            if person.age:
+                birth_date = Person.get_birth_date(deed.date, person.age)
+            else:
+                birth_date = Person.get_birth_date(deed.date, person.age)
+                is_date_computed = True
 
-        origins.append(
-            Origin.load_origin(
-                data,
-                person,
-                address,
-                OriginType.get_birth(),
-                origin_date=birth_date,
-                is_date_computed=is_date_computed,
-                order=1,
+            origins.append(
+                Origin.load_origin(
+                    data,
+                    person,
+                    address,
+                    OriginType.get_birth(),
+                    origin_date=birth_date,
+                    is_date_computed=is_date_computed,
+                    order=1,
+                )
             )
-        )
 
-        try:
-            address = row[f"{person_label}previous_domicile_location"]
-
+        address = row.get(f"{person_label}previous_domicile_location")
+        if pd.notnull(address):
             previous_domicile_date = birth_date + (deed.date - birth_date) / 2
             is_date_computed = True
 
@@ -535,8 +535,6 @@ class Origin(TimeStampedModel):
                     order=3,
                 )
             )
-        except KeyError:
-            pass
 
         return list(filter(lambda o: o is not None, origins))
 
@@ -550,7 +548,7 @@ class Origin(TimeStampedModel):
         is_date_computed=False,
         order=99,
     ):
-        if data is None or person is None or address is None or origin_type is None:
+        if data is None or person is None or pd.isnull(address) or origin_type is None:
             return None
 
         place, _ = data.get_place(address)
@@ -610,7 +608,7 @@ class Party(TimeStampedModel):
     def get_profession(label, row):
         title = row[f"{label}profession"]
 
-        if pd.notna(title):
+        if pd.notnull(title):
             profession, _ = Profession.objects.get_or_create(title=title.strip())
             return profession
 
