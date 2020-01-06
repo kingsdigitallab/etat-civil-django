@@ -286,6 +286,17 @@ class TestPerson:
         assert "Alexandria" in person.get_origin_names()
         assert "Marseille" in person.get_origin_names()
 
+    def test_get_origins(self, data, deed, births_df):
+        gender = Gender.get_m()
+        label = "father_"
+        role = Role.get_father()
+
+        person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
+        assert "Marseille" in person.get_origins().first().place.address
+        assert (
+            "Alexandria" in person.get_origins(order_by="-order").first().place.address
+        )
+
     def test_get_professions(self, data, deed, births_df):
         gender = Gender.get_m()
         label = "father_"

@@ -403,12 +403,18 @@ class Person(TimeStampedModel):
         origins = ""
 
         place = None
-        for origin in self.origin_from.order_by("date"):
+        for origin in self.get_origins():
             if origin.place != place:
                 place = origin.place
                 origins = f"{origins} -> {place}"
 
         return origins.strip()
+
+    def get_origins(self, order_by=["order", "date"]):
+        if isinstance(order_by, list):
+            return self.origin_from.order_by(*order_by)
+
+        return self.origin_from.order_by(order_by)
 
     def get_professions(self):
         professions = []
@@ -448,7 +454,7 @@ class Person(TimeStampedModel):
             properties["gender"] = self.gender.title
 
         prev_place = None
-        origins = self.origin_from.order_by("date")
+        origins = self.get_origins()
         for idx, origin in enumerate(origins):
             if idx == 0 or idx == origins.count() - 1:
                 pos = "first" if idx == 0 else "last"
