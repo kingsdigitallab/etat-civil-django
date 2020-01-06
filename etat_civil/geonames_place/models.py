@@ -38,7 +38,7 @@ class FeatureClass(TimeStampedModel):
 
 
 class Place(TimeStampedModel):
-    geonames_id = models.PositiveIntegerField(unique=True)
+    geonames_id = models.BigIntegerField(unique=True)
     update_from_geonames = models.BooleanField(default=True)
     address = models.CharField(max_length=512, blank=True, null=True)
     class_description = models.ForeignKey(

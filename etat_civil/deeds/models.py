@@ -108,8 +108,8 @@ class Data(TimeStampedModel):
         """Returns a geonames place and a return code, and updates the internal
         place name cache, `locations_df`, when new places get a `geonames_id`.
         Code 0, the place was found in the location cache; code 1, the place was
-        searched in geonames using a geonames id; code 2, the place name was
-        found in the cache but the place details were harvested from geonames;
+        searched in geonames by geonames id; code 2, the place was searched in
+        geonames by name; code 3, the place was searched in geonames by lat, lon;
         code -1, the place was not in the cache and was searched in geonames by
         name."""
         if not name:
@@ -123,15 +123,30 @@ class Data(TimeStampedModel):
             geonames_id = location["geonames_id"]
 
             if pd.notnull(geonames_id):
+                # get place by geonames id
                 place, created = Place.objects.get_or_create(
                     geonames_id=int(geonames_id)
                 )
                 if created:
                     code = 1
-
-                return place, code
-
-            code = 2
+            elif pd.notnull(location["lat"]) and pd.notnull(location["lon"]):
+                # get place by lat, lon
+                lat = location["lat"]
+                lon = location["lon"]
+                geonames_id = f"-{int(lat*10000)}{int(lon*10000)}"
+                place, created = Place.objects.get_or_create(
+                    geonames_id=int(geonames_id),
+                    update_from_geonames=False,
+                    address=name,
+                    lat=location["lat"],
+                    lon=location["lon"],
+                )
+                if created:
+                    code = 3
+            else:
+                # get place by name
+                place = Place.get_or_create_from_geonames(address=name)
+                code = 2
         except KeyError:
             code = -1
 
@@ -141,10 +156,11 @@ class Data(TimeStampedModel):
             self.locations_df = self.locations_df.append(new_location_df, sort=True)
             self.locations_df.set_index("display_name")
 
-        place = Place.get_or_create_from_geonames(address=name)
+            # get place by name
+            place = Place.get_or_create_from_geonames(address=name)
 
         # updates the locations cache
-        if place:
+        if code != 0 and place:
             self.locations_df.loc[name, "geonames_id"] = place.geonames_id
 
         return place, code

@@ -86,12 +86,12 @@ class TestData:
     def test_get_place(self, data):
         locations_df = pd.DataFrame(
             {
-                "id": [1, 2],
-                "location": ["Paris", "Alexandria"],
-                "geonames_id": [2988507, None],
-                "lat": [48.853, None],
-                "lon": [2.349, None],
-                "display_name": ["1: Paris", "2: Alexandria"],
+                "id": [1, 2, 3],
+                "location": ["Paris", "Alexandria", "Abouzabel"],
+                "geonames_id": [2988507, None, None],
+                "lat": [48.853, None, 30.242],
+                "lon": [2.349, None, 31.411],
+                "display_name": ["1: Paris", "2: Alexandria", "3: Abouzabel"],
             }
         )
         locations_df = locations_df.set_index("display_name")
@@ -125,6 +125,11 @@ class TestData:
         p, r = data.get_place(None)
         assert p is None
         assert r == -1
+
+        p, r = data.get_place("3: Abouzabel")
+        assert p is not None
+        assert p.geonames_id == -302420314110
+        assert r == 3
 
 
 @pytest.mark.usefixtures("data")
