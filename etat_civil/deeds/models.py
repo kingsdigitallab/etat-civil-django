@@ -137,12 +137,13 @@ class Data(TimeStampedModel):
                 place, created = Place.objects.get_or_create(
                     geonames_id=int(geonames_id),
                     update_from_geonames=False,
-                    address=name,
                     lat=location["lat"],
                     lon=location["lon"],
                 )
                 if created:
                     code = 3
+                    place.address = name
+                    place.save()
             else:
                 # get place by name
                 place = Place.get_or_create_from_geonames(address=name)
