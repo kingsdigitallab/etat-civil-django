@@ -406,7 +406,7 @@ class Person(TimeStampedModel):
         for origin in self.get_origins():
             if origin.place != place:
                 place = origin.place
-                origins = f"{origins} -> {place}"
+                origins = f"{origins} -> {origin.origin_type}: {place}"
 
         return origins.strip()
 
@@ -602,7 +602,9 @@ class Person(TimeStampedModel):
         label = ""
         gender = None
 
-        return Person.load_person(data, label, gender, role, deed, row)
+        return Person.load_person(
+            data, label, gender, role, deed, row, from_death_deed=True
+        )
 
 
 class OriginType(BaseAL):
