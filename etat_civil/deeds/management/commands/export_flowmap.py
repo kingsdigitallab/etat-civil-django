@@ -41,10 +41,11 @@ class Command(BaseCommand):
             tsv_writer.writerow(["origin", "dest", "count"])
 
             for person in Person.objects.all():
-                if person.origin_from.count() > 1:
+                person_origins = person.get_origins()
+
+                if person_origins.count() > 1:
                     origin_place = None
 
-                    person_origins = person.origin_from.order_by("date")
                     for idx, person_origin in enumerate(person_origins):
                         dest_place = person_origin.place
 
