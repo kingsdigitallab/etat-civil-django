@@ -287,7 +287,7 @@ SOCIALACCOUNT_ADAPTER = "etat_civil.users.adapters.SocialAccountAdapter"
 DEEDS_INITIAL_DATA = {
     "DeedType": ["birth", "death", "marriage"],
     "Gender": ["f", "m"],
-    "OriginType": ["birth", "domicile"],
+    "OriginType": ["birth", "death", "domicile"],
     "Role": ["father", "mother", "bride", "groom", "deceased"],
 }
 
