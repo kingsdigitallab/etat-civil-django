@@ -483,7 +483,7 @@ class Person(TimeStampedModel):
         return Person.load_person(data, label, gender, role, deed, row)
 
     @staticmethod
-    def load_person(data, label, gender, role, deed, row):
+    def load_person(data, label, gender, role, deed, row, from_death_deed=False):
         unknown = False
 
         name = Person.get_name_field(f"{label}name", row)
@@ -511,7 +511,9 @@ class Person(TimeStampedModel):
             person.age = age
             person.save()
 
-        Origin.load_origins(data, person, label, deed, row)
+        Origin.load_origins(
+            data, person, label, deed, row, from_death_deed=from_death_deed
+        )
 
         Party.load_party(person, label, role, deed, row)
 
@@ -603,6 +605,10 @@ class OriginType(BaseAL):
         return OriginType.objects.get(title="birth")
 
     @staticmethod
+    def get_death():
+        return OriginType.objects.get(title="death")
+
+    @staticmethod
     def get_domicile():
         return OriginType.objects.get(title="domicile")
 
@@ -638,7 +644,7 @@ class Origin(TimeStampedModel):
         return geojson
 
     @staticmethod
-    def load_origins(data, person, person_label, deed, row):
+    def load_origins(data, person, person_label, deed, row, from_death_deed=False):
         if (
             data is None
             or person is None
@@ -685,22 +691,34 @@ class Origin(TimeStampedModel):
                 )
             )
 
-        address = row.get(f"{person_label}previous_domicile_location")
-        if pd.notnull(address):
-            previous_domicile_date = birth_date + (deed.date - birth_date) / 2
-            is_date_computed = True
-
+        if from_death_deed:
             origins.append(
                 Origin.load_origin(
                     data,
                     person,
-                    address,
-                    OriginType.get_domicile(),
-                    origin_date=previous_domicile_date,
-                    is_date_computed=is_date_computed,
-                    order=3,
+                    deed.place.address,
+                    OriginType.get_death(),
+                    origin_date=deed.date,
+                    order=8,
                 )
             )
+        else:
+            address = row.get(f"{person_label}previous_domicile_location")
+            if pd.notnull(address):
+                previous_domicile_date = birth_date + (deed.date - birth_date) / 2
+                is_date_computed = True
+
+                origins.append(
+                    Origin.load_origin(
+                        data,
+                        person,
+                        address,
+                        OriginType.get_domicile(),
+                        origin_date=previous_domicile_date,
+                        is_date_computed=is_date_computed,
+                        order=3,
+                    )
+                )
 
         return list(filter(lambda o: o is not None, origins))
 

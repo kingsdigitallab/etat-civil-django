@@ -243,17 +243,17 @@ class TestDeed:
 @pytest.mark.usefixtures("data", "deed", "births_df", "marriages_df", "deaths_df")
 class TestPerson:
     def test_fullname(self):
-        person = Person(name='Jack', surname='Todd')
-        assert person.fullname == 'Jack Todd'
+        person = Person(name="Jack", surname="Todd")
+        assert person.fullname == "Jack Todd"
 
-        person = Person(name='Jack', surname=None)
-        assert person.fullname == 'Jack'
+        person = Person(name="Jack", surname=None)
+        assert person.fullname == "Jack"
 
-        person = Person(name=None, surname='Todd')
-        assert person.fullname == 'Todd'
+        person = Person(name=None, surname="Todd")
+        assert person.fullname == "Todd"
 
         person = Person(name=None, surname=None)
-        assert person.fullname == ''
+        assert person.fullname == ""
 
     def test_birthplace(self, data, deed, births_df):
         gender = Gender.get_f()
@@ -298,14 +298,14 @@ class TestPerson:
         assert "Négociant" in person.get_professions()
 
     def test_to_geojson(self, data, deed, marriages_df):
-        person = Person(name='Jack', surname='Todd')
+        person = Person(name="Jack", surname="Todd")
         assert person.to_geojson() == {}
 
         person = Person.load_groom(data, deed, marriages_df.iloc[7])
         geojson = person.to_geojson()
-        assert 'properties' in geojson
-        assert geojson['properties']['name'] == "Pierre Honoré Louis Beraud"
-        assert len(geojson['geometry']['coordinates']) > 1
+        assert "properties" in geojson
+        assert geojson["properties"]["name"] == "Pierre Honoré Louis Beraud"
+        assert len(geojson["geometry"]["coordinates"]) > 1
 
     def test_load_father(self, data, deed, births_df):
         row = births_df.iloc[0]
@@ -332,6 +332,12 @@ class TestPerson:
         assert person is not None
         assert person.name == "Catherine"
         assert person.unknown is False
+        assert person.origin_from.count() == 1
+
+        person = Person.load_person(
+            data, label, gender, role, deed, row, from_death_deed=True
+        )
+        assert person.origin_from.count() == 2
 
         row = births_df.iloc[8]
         person = Person.load_person(data, label, gender, role, deed, row)
@@ -456,6 +462,11 @@ class TestOrigin:
         origins = Origin.load_origins(data, person, "father_", deed, births_df.iloc[3])
         assert len(origins) == 2
 
+        origins = Origin.load_origins(
+            data, person, "father_", deed, births_df.iloc[3], from_death_deed=True
+        )
+        assert len(origins) == 3
+
     def test_load_origin(self, data, deed, person, births_df):
         address = "0051: Alexandrie"
         origin_type = OriginType.get_birth()
@@ -479,12 +490,12 @@ class TestOrigin:
         origin = Origin.load_origin(data, person, "0051: Alexandrie", origin_type)
 
         geojson = origin.to_geojson()
-        assert 'origin_place' in geojson
-        assert geojson['origin_place'] == 'Alexandria'
+        assert "origin_place" in geojson
+        assert geojson["origin_place"] == "Alexandria"
 
-        geojson = origin.to_geojson(label='origin_first')
-        assert 'origin_first_place' in geojson
-        assert geojson['origin_first_place'] == 'Alexandria'
+        geojson = origin.to_geojson(label="origin_first")
+        assert "origin_first_place" in geojson
+        assert geojson["origin_first_place"] == "Alexandria"
 
 
 @pytest.mark.django_db
