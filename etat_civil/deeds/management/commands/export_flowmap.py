@@ -26,14 +26,7 @@ class Command(BaseCommand):
         self.handle_flows(output_dir)
 
     def handle_locations(self, output_dir):
-        with open(os.path.join(output_dir, "locations.tsv"), "w") as f:
-            tsv_writer = csv.writer(f, delimiter="\t")
-            tsv_writer.writerow(["id", "name", "lat", "lon"])
-
-            for p in Place.objects.all():
-                tsv_writer.writerow([p.geonames_id, p.address, p.lat, p.lon])
-
-            f.close()
+        Place.to_csv(os.path.join(output_dir, "locations.tsv"), delimiter="\t")
 
     def handle_flows(self, output_dir):
         with open(os.path.join(output_dir, "flows.tsv"), "w") as f:

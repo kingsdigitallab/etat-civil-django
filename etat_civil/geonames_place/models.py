@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import csv
+
 import geocoder
 from django.conf import settings
 from django.db import models
@@ -105,6 +107,9 @@ class Place(TimeStampedModel):
         else:
             self.lon = geoname.lng
 
+    def to_list(self):
+        return [self.geonames_id, self.address, self.lat, self.lon]
+
     @staticmethod
     def create_or_update_from_geonames(address, country_code=None):
         count = 0
@@ -161,3 +166,17 @@ class Place(TimeStampedModel):
             return p
 
         return None
+
+    @staticmethod
+    def to_csv(csvfile, **fmtparams):
+        """Exports all the places to a CSV file, containing the id, name, lat, and lon
+        values for each place. For formatting parameters see
+        https://docs.python.org/3/library/csv.html#csv-fmt-params."""
+        with open(csvfile, "w") as f:
+            csv_writer = csv.writer(f, **fmtparams)
+            csv_writer.writerow(["id", "name", "lat", "lon"])
+
+            for place in Place.objects.all():
+                csv_writer.writerow(place.to_list())
+
+            f.close()
