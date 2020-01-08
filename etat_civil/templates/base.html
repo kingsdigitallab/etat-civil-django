@@ -92,6 +92,23 @@
                   target="metabase">kepler.gl</a>
               </div>
             </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="exploreDropdown"
+                role="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                Export
+              </a>
+              <div class="dropdown-menu" aria-labelledby="exploreDropdown">
+                <a class="dropdown-item" href="{% url 'deeds:geojson' %}"
+                  target="metabase">GeoJSON</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item"
+                  href="{# url 'flowmap_locations_view' #}"
+                  target="metabase">flowmap.blue: locations</a>
+                <a class="dropdown-item" href="{# url 'flowmap_flows_view' #}"
+                  target="metabase">flowmap.blue: flows</a>
+              </div>
+            </li>
           </ul>
           <ul class="navbar-nav">
             {% if request.user.is_authenticated %}
