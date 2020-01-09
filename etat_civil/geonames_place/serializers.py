@@ -6,19 +6,19 @@ from .models import ClassDescription, Country, FeatureClass, Place
 class ClassDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassDescription
-        fields = ['title']
+        fields = ["title"]
 
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ['name', 'code']
+        fields = ["name", "code"]
 
 
 class FeatureClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeatureClass
-        fields = ['title']
+        fields = ["title"]
 
 
 class PlaceSerializer(serializers.ModelSerializer):
@@ -28,5 +28,12 @@ class PlaceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Place
-        fields = ['geonames_id', 'address', 'class_description',
-                  'country', 'feature_class', 'lat', 'lon']
+        fields = [
+            "geonames_id",
+            "address",
+            "class_description",
+            "country",
+            "feature_class",
+            "lat",
+            "lon",
+        ]
