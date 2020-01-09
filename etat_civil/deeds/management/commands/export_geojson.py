@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 
 from django.core.management.base import BaseCommand
 from etat_civil.deeds.models import Person
@@ -21,13 +20,4 @@ class Command(BaseCommand):
         output = options["output"]
         stream = open(output, "w") if output else self.stdout
 
-        geo = defaultdict()
-        geo["type"] = "FeatureCollection"
-        geo["features"] = []
-
-        for person in Person.objects.all():
-            feature = person.to_geojson()
-            if feature:
-                geo["features"].append(feature)
-
-        json.dump(geo, stream, indent=2, sort_keys=True)
+        json.dump(Person.persons_to_geojson(), stream, indent=2, sort_keys=True)

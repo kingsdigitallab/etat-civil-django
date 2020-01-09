@@ -282,6 +282,11 @@ class TestPerson:
         person = Person.load_person(data, label, gender, role, deed, births_df.iloc[5])
         assert person.domicile.place.address == "Alexandria"
 
+    def test_get_flows(self, data, deed, births_df):
+        person = Person.load_father(data, deed, births_df.iloc[5])
+        flows = person.get_flows()
+        assert len(flows) == 1
+
     def test_get_origin_names(self, data, deed, births_df):
         gender = Gender.get_m()
         label = "father_"
@@ -451,6 +456,24 @@ class TestPerson:
         assert person is not None
         assert person.name == "Bernard"
         assert person.age == 20
+
+    def test_persons_to_flows(self, data, deed, births_df):
+        flows = Person.persons_to_flows()
+        assert len(flows) == 0
+
+        Person.load_father(data, deed, births_df.iloc[5])
+
+        flows = Person.persons_to_flows()
+        assert len(flows) == 1
+
+    def test_persons_to_geojson(self, data, deed, births_df):
+        g = Person.persons_to_geojson()
+        assert len(g["features"]) == 0
+
+        Person.load_father(data, deed, births_df.iloc[0])
+
+        g = Person.persons_to_geojson()
+        assert len(g["features"]) == 1
 
 
 @pytest.mark.usefixtures("data", "deed", "person", "births_df")

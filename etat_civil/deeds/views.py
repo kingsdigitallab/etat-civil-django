@@ -7,16 +7,7 @@ class GeoJSONView(View):
     http_method_names = ["get"]
 
     def get(self, request, *args, **kwargs):
-        geo = {}
-        geo["type"] = "FeatureCollection"
-        geo["features"] = []
-
-        for person in Person.objects.all():
-            feature = person.to_geojson()
-            if feature:
-                geo["features"].append(feature)
-
-        return JsonResponse(geo)
+        return JsonResponse(Person.persons_to_geojson())
 
 
 geojson_view = GeoJSONView.as_view()

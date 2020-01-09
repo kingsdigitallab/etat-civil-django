@@ -26,27 +26,17 @@ class Command(BaseCommand):
         self.handle_flows(output_dir)
 
     def handle_locations(self, output_dir):
-        Place.to_csv(os.path.join(output_dir, "locations.tsv"), delimiter="\t")
+        with open(os.path.join(output_dir, "locations.tsv"), "w") as f:
+            csv_writer = csv.writer(f, delimiter="\t", quoting=csv.QUOTE_NONNUMERIC)
+            csv_writer.writerow(["id", "name", "lat", "lon"])
+            csv_writer.writerows(Place.places_to_list())
+
+            f.close()
 
     def handle_flows(self, output_dir):
         with open(os.path.join(output_dir, "flows.tsv"), "w") as f:
-            tsv_writer = csv.writer(f, delimiter="\t")
-            tsv_writer.writerow(["origin", "dest", "count"])
-
-            for person in Person.objects.all():
-                person_origins = person.get_origins()
-
-                if person_origins.count() > 1:
-                    origin_place = None
-
-                    for idx, person_origin in enumerate(person_origins):
-                        dest_place = person_origin.place
-
-                        if idx > 0 and origin_place:
-                            tsv_writer.writerow(
-                                [origin_place.geonames_id, dest_place.geonames_id, 1]
-                            )
-
-                        origin_place = person_origin.place
+            csv_writer = csv.writer(f, delimiter="\t", quoting=csv.QUOTE_NONNUMERIC)
+            csv_writer.writerow(["origin", "dest", "count"])
+            csv_writer.writerows(Person.persons_to_flows())
 
             f.close()

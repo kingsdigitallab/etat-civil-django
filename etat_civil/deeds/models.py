@@ -1,12 +1,12 @@
+from collections import Counter
 from datetime import datetime, timedelta
 
 import pandas as pd
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext as _
-from model_utils.models import TimeStampedModel
-
 from etat_civil.geonames_place.models import Place
+from model_utils.models import TimeStampedModel
 
 
 class BaseAL(TimeStampedModel):
@@ -416,6 +416,28 @@ class Person(TimeStampedModel):
 
         return None
 
+    def get_flows(self):
+        """Returns a list of origins/destinations that a person moved from/to."""
+        flows = []
+
+        orig_place = None
+
+        for idx, origin in enumerate(self.get_origins()):
+            dest_place = origin.place
+
+            if idx > 0 and orig_place:
+                flows.append((orig_place.geonames_id, dest_place.geonames_id))
+
+            orig_place = origin.place
+
+        return flows
+
+    def get_origins(self, order_by=["order", "date"]):
+        if isinstance(order_by, list):
+            return self.origin_from.order_by(*order_by)
+
+        return self.origin_from.order_by(order_by)
+
     def get_origin_names(self):
         origins = ""
 
@@ -426,12 +448,6 @@ class Person(TimeStampedModel):
                 origins = f"{origins} -> {origin.origin_type}: {place}"
 
         return origins.strip()
-
-    def get_origins(self, order_by=["order", "date"]):
-        if isinstance(order_by, list):
-            return self.origin_from.order_by(*order_by)
-
-        return self.origin_from.order_by(order_by)
 
     def get_professions(self):
         professions = []
@@ -622,6 +638,32 @@ class Person(TimeStampedModel):
         return Person.load_person(
             data, label, gender, role, deed, row, from_death_deed=True
         )
+
+    @staticmethod
+    def persons_to_flows():
+        """Exports all the persons flows into a list of tupples, containing the origin,
+        destination, and count for each flow"""
+        flows = []
+
+        for person in Person.objects.all():
+            flows.extend(person.get_flows())
+
+        counter = Counter(flows)
+
+        return [[k[0], k[1], counter[k]] for k in counter.keys()]
+
+    @staticmethod
+    def persons_to_geojson():
+        geo = {}
+        geo["type"] = "FeatureCollection"
+        geo["features"] = []
+
+        for person in Person.objects.all():
+            feature = person.to_geojson()
+            if feature:
+                geo["features"].append(feature)
+
+        return geo
 
 
 class OriginType(BaseAL):
