@@ -9,7 +9,10 @@ class GeoJSONView(View):
     http_method_names = ["get"]
 
     def get(self, request, *args, **kwargs):
-        return JsonResponse(Person.persons_to_geojson())
+        response = JsonResponse(Person.persons_to_geojson())
+        response["Content-Disposition"] = 'attachment; filename="geojson.json"'
+
+        return response
 
 
 geojson_view = GeoJSONView.as_view()
