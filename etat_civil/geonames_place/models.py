@@ -168,7 +168,7 @@ class Place(TimeStampedModel):
         return None
 
     @staticmethod
-    def to_csv(csvfile, **fmtparams):
+    def places_to_csv(csvfile, **fmtparams):
         """Exports all the places to a CSV file, containing the id, name, lat, and lon
         values for each place. For formatting parameters see
         https://docs.python.org/3/library/csv.html#csv-fmt-params."""

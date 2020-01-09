@@ -72,17 +72,17 @@ class TestPlace:
         assert place is not None
         assert place.geonames_id == self.GEONAMES_ID
 
-    def test_to_csv(self, tmpdir):
+    def test_places_to_csv(self, tmpdir):
         p = tmpdir.mkdir("places").join("places.tsv")
 
-        Place.to_csv(p)
+        Place.places_to_csv(p)
         assert "id" in p.read()
         assert "," in p.read()
         assert len(tmpdir.listdir()) == 1
 
         Place.objects.get_or_create(geonames_id=1, address="Address", lat=1, lon=1)
 
-        Place.to_csv(p, delimiter="\t")
+        Place.places_to_csv(p, delimiter="\t")
         assert "Address" in p.read()
         assert "\t" in p.read()
         assert len(tmpdir.listdir()) == 1
