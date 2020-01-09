@@ -87,9 +87,9 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item"
                   href="https://flowmap.blue/1hsU13EUFyX8m9xp7GYGGEMyC1bZ8_9sU6b4e2KHwVSc"
-                  target="metabase">flowmap.blue</a>
+                  target="flowmap">flowmap.blue</a>
                 <a class="dropdown-item" href="https://kepler.gl/"
-                  target="metabase">kepler.gl</a>
+                  target="kepler">kepler.gl</a>
               </div>
             </li>
             <li class="nav-item dropdown">
@@ -99,14 +99,14 @@
                 Export
               </a>
               <div class="dropdown-menu" aria-labelledby="exploreDropdown">
-                <a class="dropdown-item" href="{% url 'deeds:geojson' %}"
-                  target="metabase">GeoJSON</a>
+                <a class="dropdown-item"
+                  href="{% url 'deeds:geojson' %}">GeoJSON</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item"
-                  href="{# url 'flowmap_locations_view' #}"
-                  target="metabase">flowmap.blue: locations</a>
-                <a class="dropdown-item" href="{# url 'flowmap_flows_view' #}"
-                  target="metabase">flowmap.blue: flows</a>
+                  href="{% url 'deeds:flowmap_locations' %}">flowmap.blue:
+                  locations</a>
+                <a class="dropdown-item"
+                  href="{% url 'deeds:flowmap_flows' %}">flowmap.blue: flows</a>
               </div>
             </li>
           </ul>
