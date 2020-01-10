@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-  bash gcc graphviz graphviz-dev git python3-dev
+  bash gcc graphviz graphviz-dev git libpq-dev python3-dev
 
 RUN groupadd -r django && useradd --no-log-init -r -g django django
 
