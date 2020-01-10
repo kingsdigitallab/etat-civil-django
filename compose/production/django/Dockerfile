@@ -7,8 +7,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
   bash gcc graphviz graphviz-dev git python3-dev
 
-RUN addgroup -S django \
-  && adduser -S -G django django
+RUN groupadd -r django && useradd --no-log-init -r -g django django
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
