@@ -27,7 +27,7 @@ class DataAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        import_data_async.delay(request, obj)
+        import_data_async.delay(obj)
 
 
 class PartyInline(admin.TabularInline):
