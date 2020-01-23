@@ -16,22 +16,44 @@ Etat Civil
      :alt: Black code style
 
 
-For the period 1790-1890, France was the only country to keep systematic (tabular) track of their expatriate citizens
-making it possible to study international mobility at scale and in novel ways. The Archives of the French Ministry of
-Foreign Affairs hold 120,000 digitised microfilm images of the records from 215 consulates around the world.
+For the period 1790-1890, France was the only country to keep systematic
+(tabular) track of their expatriate citizens making it possible to study
+international mobility at scale and in novel ways. The Archives of the French
+Ministry of Foreign Affairs hold 120,000 digitised microfilm images of the
+records from 215 consulates around the world.
 
-The “Etat Civil” -- standing for civil registration of births, deaths and marriages -- is an exploratory project led by
-Dr David Todd in collaboration with King’s Digital Lab supported by the Faculty of Arts & Humanities, the Department of
-History at King’s College London and the Harvard and Cambridge Centre for History and Economics. The project processes
-data from the Egyptian consulate of the “Etat Civil” to visualise mobility on a continental or global scale and offer
-insights on patterns of migration and social history more in general.
+The “Etat Civil” -- standing for civil registration of births, deaths and
+marriages -- is an exploratory project led by Dr David Todd in collaboration
+with King’s Digital Lab supported by the Faculty of Arts & Humanities, the
+Department of History at King’s College London and the Harvard and Cambridge
+Centre for History and Economics. The project processes data from the Egyptian
+consulate of the “Etat Civil” to visualise mobility on a continental or global
+scale and offer insights on patterns of migration and social history more in
+general.
 
 Settings
 --------
 
-Moved to settings_.
+See detailed `cookiecutter-django settings documentation`_.
 
-.. _settings: http://cookiecutter-django.readthedocs.io/en/latest/settings.html
+.. _cookiecutter-django settings documentation: http://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/settings.html
+
+Development
+-----------
+
+Local with Docker
+^^^^^^^^^^^^^^^^^
+
+See detailed `cookiecutter-django development with Docker documentation`_.
+
+.. _cookiecutter-django development with Docker documentation: https://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/developing-locally-docker.html
+
+Local without Docker
+^^^^^^^^^^^^^^^^^^^^
+
+See detailed `cookiecutter-django local development documentation`_.
+
+.. _cookiecutter-django local development documentation: https://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/developing-locally.html
 
 Basic Commands
 --------------
@@ -39,13 +61,18 @@ Basic Commands
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 
-* To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+* To create a **normal user account**, just go to Sign Up and fill out the
+  form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go
+  to your console to see a simulated email verification message. Copy the link
+  into your browser. Now the user's email should be verified and ready to go.
 
 * To create an **superuser account**, use this command::
 
     $ python manage.py createsuperuser
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+For convenience, you can keep your normal user logged in on Chrome and your
+superuser logged in on Firefox (or similar), so that you can see how the site
+behaves for both kinds of users.
 
 Type checks
 ^^^^^^^^^^^
@@ -54,7 +81,7 @@ Running type checks with mypy:
 
 ::
 
-  $ mypy etat_civil
+  $ mypy {{cookiecutter.project_slug}}
 
 Test coverage
 ^^^^^^^^^^^^^
@@ -78,24 +105,3 @@ Live reloading and Sass CSS compilation
 Moved to `Live reloading and SASS compilation`_.
 
 .. _`Live reloading and SASS compilation`: http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
-
-
-
-
-
-Deployment
-----------
-
-The following details how to deploy this application.
-
-
-
-Docker
-^^^^^^
-
-See detailed `cookiecutter-django Docker documentation`_.
-
-.. _`cookiecutter-django Docker documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
-
-
-
