@@ -38,22 +38,12 @@ See detailed `cookiecutter-django settings documentation`_.
 
 .. _cookiecutter-django settings documentation: http://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/settings.html
 
-Development
------------
-
-Local with Docker
-^^^^^^^^^^^^^^^^^
+Running
+-------
 
 See detailed `cookiecutter-django development with Docker documentation`_.
 
 .. _cookiecutter-django development with Docker documentation: https://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/developing-locally-docker.html
-
-Local without Docker
-^^^^^^^^^^^^^^^^^^^^
-
-See detailed `cookiecutter-django local development documentation`_.
-
-.. _cookiecutter-django local development documentation: https://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/developing-locally.html
 
 Basic Commands
 --------------
@@ -104,4 +94,4 @@ Live reloading and Sass CSS compilation
 
 Moved to `Live reloading and SASS compilation`_.
 
-.. _`Live reloading and SASS compilation`: http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
+.. _`Live reloading and SASS compilation`: http://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
