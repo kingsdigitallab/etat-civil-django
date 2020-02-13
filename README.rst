@@ -130,10 +130,3 @@ Running tests with py.test
 ::
 
   $ pytest
-
-Live reloading and Sass CSS compilation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Moved to `Live reloading and SASS compilation`_.
-
-.. _`Live reloading and SASS compilation`: http://cookiecutter-django-kingsdigitallab.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
