@@ -1,4 +1,4 @@
-# Etat Civil documentation build configuration file, created by
+# État Civil documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -39,7 +39,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "Etat Civil"
+project = "État Civil"
 copyright = """2019, King's Digital Lab"""
 
 # The version info for the project you're documenting, acts as replacement for
@@ -183,7 +183,7 @@ latex_documents = [
     (
         "index",
         "etat_civil.tex",
-        "Etat Civil Documentation",
+        "État Civil Documentation",
         """King's Digital Lab""",
         "manual",
     )
@@ -215,7 +215,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ("index", "etat_civil", "Etat Civil Documentation", ["""King's Digital Lab"""], 1,)
+    ("index", "etat_civil", "État Civil Documentation", ["""King's Digital Lab"""], 1,)
 ]
 
 # If true, show URL addresses after external links.
@@ -231,10 +231,10 @@ texinfo_documents = [
     (
         "index",
         "etat_civil",
-        "Etat Civil Documentation",
+        "État Civil Documentation",
         """King's Digital Lab""",
-        "Etat Civil",
-        """Etat Civil Project Description""",
+        "État Civil",
+        """État Civil Project Description""",
         "Miscellaneous",
     )
 ]

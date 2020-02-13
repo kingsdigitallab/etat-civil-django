@@ -4,16 +4,19 @@
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
     :alt: MIT
-.. image:: https://travis-ci.org/kingsdigitallab/etat-civil-django.svg?branch=develop
+.. image:: https://travis-ci.org/kingsdigitallab/etat-civil-django.svg
     :target: https://travis-ci.org/kingsdigitallab/etat-civil-django
-.. image:: https://coveralls.io/repos/github/kingsdigitallab/etat-civil-django/badge.svg?branch=develop
-    :target: https://coveralls.io/github/kingsdigitallab/etat-civil-django?branch=develop
+.. image:: https://coveralls.io/repos/github/kingsdigitallab/etat-civil-django/badge.svg
+    :target: https://coveralls.io/github/kingsdigitallab/etat-civil-django
+.. image:: https://readthedocs.org/projects/etat-civil-django/badge/?version=latest
+    :target: https://etat-civil-django.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 .. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
+    :target: https://github.com/pydanny/cookiecutter-django/
+    :alt: Built with Cookiecutter Django
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-     :target: https://github.com/ambv/black
-     :alt: Black code style
+    :target: https://github.com/ambv/black
+    :alt: Black code style
 
 
 For the period 1790-1890, France was the only country to keep systematic
