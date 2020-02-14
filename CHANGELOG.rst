@@ -15,6 +15,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 [Unreleased]
 --------------------
 
+Added
+~~~~~
+* Team information to the docs
+* humans.txt (http://humanstxt.org/)
+* Docker script to  stop the containers
 
 [0.1.0] - 2020-02-13
 --------------------
