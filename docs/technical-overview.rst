@@ -7,9 +7,10 @@ Technical Overview
 Team
 ----
 
-* Arianna Ciula (Analyst)
-* Ginestra Ferraro (Designer)
-* Miguel Vieira (Developper)
+.. literalinclude:: ../etat_civil/static/humans.txt
+    :language: text
+    :start-after: /* TEAM */
+    :end-before: /* SITE */
 
 Technologies and Processes
 --------------------------

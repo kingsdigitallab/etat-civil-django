@@ -1,0 +1,17 @@
+/* TEAM */
+Organisation: King's Digital Lab
+Site: https://kdl.kcl.ac.uk
+Email: kdl-info [at] kcl.ac.uk
+Twitter: @kingsdigitallab
+GitHub: https://github.com/kingsdigitallab
+Location: London WC2B 5LE, United Kingdom
+
+Research Software Analyst: Arianna Ciula
+Site: https://www.kdl.kcl.ac.uk/who-we-are/arianna-ciula/
+
+Research Software Engineer: Miguel Vieira
+Site: https://www.kdl.kcl.ac.uk/who-we-are/miguel-vieira/
+
+/* SITE */
+GitHub: https://github.com/kingsdigitallab/etat-civil-django/
+ReadtheDocs: https://etat-civil-django.readthedocs.io/
