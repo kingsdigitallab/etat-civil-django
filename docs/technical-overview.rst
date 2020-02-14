@@ -7,7 +7,9 @@ Technical Overview
 Team
 ----
 
-TODO: Person name/role
+* Arianna Ciula (Analyst)
+* Ginestra Ferraro (Designer)
+* Miguel Vieira (Developper)
 
 Technologies and Processes
 --------------------------
