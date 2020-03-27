@@ -20,6 +20,7 @@ Added
 * Team information to the docs
 * humans.txt (http://humanstxt.org/)
 * Docker script to  stop the containers
+* Data to source control
 
 [0.1.0] - 2020-02-13
 --------------------
