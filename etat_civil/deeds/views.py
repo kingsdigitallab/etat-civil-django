@@ -22,10 +22,10 @@ class FlowmapLocationsView(View):
     http_method_names = ["get"]
 
     def get(self, request, *args, **kwargs):
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="locations.csv"'
+        response = HttpResponse(content_type="text/tsv")
+        response["Content-Disposition"] = 'attachment; filename="locations.tsv"'
 
-        csv_writer = csv.writer(response, quoting=csv.QUOTE_NONNUMERIC)
+        csv_writer = csv.writer(response, delimiter="\t", quoting=csv.QUOTE_NONNUMERIC)
         csv_writer.writerow(["id", "name", "lat", "lon"])
         csv_writer.writerows(Place.places_to_list())
 
@@ -39,10 +39,10 @@ class FlowmapFlowsView(View):
     http_method_names = ["get"]
 
     def get(self, request, *args, **kwargs):
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="flows.csv"'
+        response = HttpResponse(content_type="text/tsv")
+        response["Content-Disposition"] = 'attachment; filename="flows.tsv"'
 
-        csv_writer = csv.writer(response, quoting=csv.QUOTE_NONNUMERIC)
+        csv_writer = csv.writer(response, delimiter="\t", quoting=csv.QUOTE_NONNUMERIC)
         csv_writer.writerow(["origin", "dest", "count"])
         csv_writer.writerows(Person.persons_to_flows())
 
