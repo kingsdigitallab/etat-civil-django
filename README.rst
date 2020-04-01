@@ -30,7 +30,7 @@ marriages -- is an exploratory project led by `Dr David Todd`_ in collaboration
 with `King's Digital Lab`_ supported by the Faculty of Arts & Humanities, the
 Department of History at `King's College London`_ and the
 `Harvard and Cambridge Centre for History and Economics`_. The project
-processes data from the Egyptian consulate of the "État Civil" to visualise
+processes `data`_ from the Egyptian consulate of the "État Civil" to visualise
 mobility on a continental or global scale and offer insights on patterns of
 migration and social history more in general.
 
@@ -38,7 +38,7 @@ migration and social history more in general.
 .. _King's Digital Lab: https://kdl.kcl.ac.uk/
 .. _King's College London: https://www.kcl.ac.uk/
 .. _Harvard and Cambridge Centre for History and Economics: https://histecon.fas.harvard.edu/
-.. _data: /tree/master/data
+.. _data: https://github.com/kingsdigitallab/etat-civil-django/tree/master/data
 
 Settings
 --------
