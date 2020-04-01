@@ -68,17 +68,17 @@ a Terminal window, for example::
 
 Start the project::
 
-    $ compose/bin/d_up.sh
+    $ ./bake.py up --build
 
 Create a superuser, in a different Terminal window, inside the Etat Civil
 project::
 
-    $ compose/bin/manage.sh createsuperuser
+    $ ./bake.py manage createsuperuser
 
 To import data via the browser the data processing worker needs to be running,
 start it with::
 
-    $  compose/bin/manage.sh rqworker default
+    $ ./bake.py rqworker default
 
 The project should be available at http://localhost:8000/. Go to
 http://localhost:8000/admin/deeds/data/ to import a new Excel file. The
@@ -104,7 +104,7 @@ Setting Up Your Users
 
 * To create an **superuser account**, use this command::
 
-    $ compose/bin/manage.sh createsuperuser
+    $ ./bake.py manage createsuperuser
 
 For convenience, you can keep your normal user logged in on Chrome and your
 superuser logged in on Firefox (or similar), so that you can see how the site
