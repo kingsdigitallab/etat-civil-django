@@ -38,6 +38,7 @@ migration and social history more in general.
 .. _King's Digital Lab: https://kdl.kcl.ac.uk/
 .. _King's College London: https://www.kcl.ac.uk/
 .. _Harvard and Cambridge Centre for History and Economics: https://histecon.fas.harvard.edu/
+.. _data: /tree/master/data
 
 Settings
 --------
