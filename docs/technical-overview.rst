@@ -37,7 +37,7 @@ Data model
 The data model graph was generated with the `django-extensions graph_models`_
 command::
 
-    $ compose/bin/manage.sh graph_models deeds -X TimeStampedModel  --disable-fields --disable-abstract-fields -o models.png
+    $ ./bake.py manage graph_models deeds -X TimeStampedModel  --disable-fields --disable-abstract-fields -o models.png
 
 .. _django-extensions graph_models: https://django-extensions.readthedocs.io/en/latest/graph_models.html
 
