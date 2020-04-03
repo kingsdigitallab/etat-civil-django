@@ -8,3 +8,7 @@ psycopg2==2.8.3 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
 # Django
 # ------------------------------------------------------------------------------
 django-anymail[mailgun]==7.0.0  # https://github.com/anymail/django-anymail
+
+# KDL
+# ------------------------------------------------------------------------------
+django-auth-ldap==2.1.0  # https://github.com/django-auth-ldap/django-auth-ldap

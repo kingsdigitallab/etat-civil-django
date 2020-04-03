@@ -1,3 +1,7 @@
+import ldap
+
+from django_auth_ldap.config import LDAPGroupQuery, LDAPSearch, PosixGroupType
+
 from .base import *  # noqa
 from .base import env
 
@@ -6,7 +10,7 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["etatcivil.ac.uk"])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["etatcivil.kdl.kcl.ac.uk"])
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -77,14 +81,12 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [  # noqa F405
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="Etat Civil <noreply@etatcivil.ac.uk>"
+    "DJANGO_DEFAULT_FROM_EMAIL", default="Etat Civil <noreply@kcl.ac.uk>"
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env(
-    "DJANGO_EMAIL_SUBJECT_PREFIX", default="[Etat Civil]"
-)
+EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[Etat Civil]")
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -147,6 +149,54 @@ LOGGING = {
             "propagate": True,
         },
     },
+}
+# AUTHENTICATION
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
+AUTHENTICATION_BACKENDS = [
+    # https://django-auth-ldap.readthedocs.io/
+    "django_auth_ldap.backend.LDAPBackend"
+] + AUTHENTICATION_BACKENDS  # noqa
+
+# LDAP AUTHENTICATION
+# ------------------------------------------------------------------------------
+# https://django-auth-ldap.readthedocs.io/
+LDAP_BASE_DC = env("LDAP_BASE_DC")
+LDAP_BASE_OU = f"ou=groups,{LDAP_BASE_DC}"
+LDAP_BASE_GROUP = f"cn={env('LDAP_BASE_GROUP')},{LDAP_BASE_OU}"
+LDAP_PROJECT_GROUP = f"cn=etatcivil,{LDAP_BASE_OU}"
+
+# Baseline configuration
+AUTH_LDAP_SERVER_URI = env("LDAP_SERVER_URI")
+AUTH_LDAP_BIND_DN = env("LDAP_BIND_DN", default="")
+AUTH_LDAP_BIND_PASSWORD = env("LDAP_BIND_PASSWORD", default="")
+AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=people," + LDAP_BASE_DC
+
+# Set up the basic group parameters
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    LDAP_BASE_OU, ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"
+)
+AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr="cn")
+
+# Simple group restrictions
+AUTH_LDAP_REQUIRE_GROUP = LDAPGroupQuery(LDAP_BASE_GROUP) | LDAPGroupQuery(
+    LDAP_PROJECT_GROUP
+)
+
+# Populate the Django user from the LDAP directory
+AUTH_LDAP_ALWAYS_UPDATE_USER = False
+
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": env("LDAP_FIRST_NAME_FIELD"),
+    "last_name": env("LDAP_LAST_NAME_FIELD"),
+    "email": env("LDAP_EMAIL_FIELD"),
+}
+
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    "is_active": LDAPGroupQuery(LDAP_BASE_GROUP) | LDAPGroupQuery(LDAP_PROJECT_GROUP),
+    "is_staff": LDAPGroupQuery(LDAP_BASE_GROUP) | LDAPGroupQuery(LDAP_PROJECT_GROUP),
+    "is_superuser": LDAP_BASE_GROUP,
+    # TODO: Wagtail group settings
 }
 
 # Your stuff...

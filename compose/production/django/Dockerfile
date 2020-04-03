@@ -5,7 +5,11 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-  bash gcc graphviz graphviz-dev git libpq-dev python3-dev
+  # LDAP dependencies
+  && apt-get install -y libldap2-dev libsasl2-dev ldap-utils \
+  # cleaning up unused files
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -r django && useradd --no-log-init -r -g django django
 

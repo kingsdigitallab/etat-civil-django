@@ -14,6 +14,13 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 [Unreleased]
 --------------------
 
+Added
+~~~~~
+* LDAP configuration for production
+
+Changed
+~~~~~~~
+* Production settings for deployment
 
 [0.2.0] - 2020-03-27
 --------------------
