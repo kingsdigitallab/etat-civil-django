@@ -5,6 +5,10 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
+  # psycopg2 dependencies
+  && apt-get install -y libpq-dev \
+  # Translations dependencies
+  && apt-get install -y gettext \
   # LDAP dependencies
   && apt-get install -y libldap2-dev libsasl2-dev ldap-utils \
   # cleaning up unused files
