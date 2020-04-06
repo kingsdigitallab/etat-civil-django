@@ -4,7 +4,8 @@ FROM python:3.7-slim
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
+  # dependencies for building Python packages
+  && apt-get install -y build-essential \
   # psycopg2 dependencies
   && apt-get install -y libpq-dev \
   # Translations dependencies
