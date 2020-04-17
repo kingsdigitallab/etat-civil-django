@@ -15,7 +15,7 @@ class TestFlowmapFlowsView:
         response = view.get(request)
         content = response.content
 
-        assert response.get("Content-Disposition") == 'attachment; filename="flows.csv"'
+        assert response.get("Content-Disposition") == 'attachment; filename="flows.tsv"'
         assert b"origin" in content
         assert b"dest" in content
         assert b"count" in content
@@ -32,7 +32,7 @@ class TestFlowmapLocationsView:
 
         assert (
             response.get("Content-Disposition")
-            == 'attachment; filename="locations.csv"'
+            == 'attachment; filename="locations.tsv"'
         )
         assert b"id" in content
         assert b"name" in content

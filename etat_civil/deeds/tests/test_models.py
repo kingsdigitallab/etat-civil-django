@@ -521,7 +521,7 @@ class TestOrigin:
 
         origin = Origin.load_origin(data, person, address, origin_type)
         assert origin is not None
-        assert origin.place.address == "Alexandria"
+        assert origin.place.address == "Alexandrie"
 
     def test_to_geojson(self, data, deed, person, births_df):
         origin_type = OriginType.get_birth()
@@ -530,11 +530,11 @@ class TestOrigin:
 
         geojson = origin.to_geojson()
         assert "origin_place" in geojson
-        assert geojson["origin_place"] == "Alexandria"
+        assert geojson["origin_place"] == "Alexandrie"
 
         geojson = origin.to_geojson(label="origin_first")
         assert "origin_first_place" in geojson
-        assert geojson["origin_first_place"] == "Alexandria"
+        assert geojson["origin_first_place"] == "Alexandrie"
 
 
 @pytest.mark.django_db
