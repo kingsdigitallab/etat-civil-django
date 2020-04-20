@@ -18,6 +18,15 @@ Added
 ~~~~~
 * Latest version of the data
 
+Changed
+~~~~~~~
+* Use the place names from the data collection spreasheet rather than the geonames names
+
+Fixed
+~~~~~
+* Recover deleted test data
+* Increase gunicorn timeout for data exports
+
 
 [0.3.1] - 2020-04-06
 --------------------
