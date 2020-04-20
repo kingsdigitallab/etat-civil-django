@@ -11,6 +11,23 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+[Unreleased] - 2020-04-20
+--------------------
+
+Added
+~~~~~
+* Latest version of the data
+
+Changed
+~~~~~~~
+* Use the place names from the data collection spreasheet rather than the geonames names
+
+Fixed
+~~~~~
+* Recover deleted test data
+* Increase gunicorn timeout for data exports
+
+
 [0.3.1] - 2020-04-06
 --------------------
 
