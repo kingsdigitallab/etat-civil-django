@@ -117,9 +117,11 @@ class Data(TimeStampedModel):
 
         code = 0
         name = name.strip()
+        address = name
 
         try:
             location = self.locations_df.loc[name]
+            address = location["location"].strip()
             geonames_id = location["geonames_id"]
 
             if pd.notnull(geonames_id):
@@ -142,11 +144,11 @@ class Data(TimeStampedModel):
                 )
                 if created:
                     code = 3
-                    place.address = name
+                    place.address = address
                     place.save()
             else:
                 # get place by name
-                place = Place.get_or_create_from_geonames(address=name)
+                place = Place.get_or_create_from_geonames(address=address)
                 code = 2
         except KeyError:
             code = -1
@@ -161,8 +163,12 @@ class Data(TimeStampedModel):
             place = Place.get_or_create_from_geonames(address=name)
 
         # updates the locations cache
-        if code != 0 and place:
+        if place:
             self.locations_df.loc[name, "geonames_id"] = place.geonames_id
+
+            place.address = address
+            place.update_from_geonames = False
+            place.save()
 
         return place, code
 
