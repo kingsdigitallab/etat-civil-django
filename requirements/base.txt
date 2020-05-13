@@ -22,6 +22,7 @@ coreapi==2.3.3  # https://github.com/core-api/python-client
 # ------------------------------------------------------------------------------
 geocoder==1.38.1
 django-rq==2.2.0
+rq==1.2.2
 openpyxl==3.0.2
 pandas==0.25.3
 unidecode==1.1.1
