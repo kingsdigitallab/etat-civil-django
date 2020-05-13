@@ -439,10 +439,12 @@ class Person(TimeStampedModel):
         return flows
 
     def get_origins(self, order_by=["order", "date"]):
-        if isinstance(order_by, list):
-            return self.origin_from.order_by(*order_by)
+        origins = self.origin_from.all()
 
-        return self.origin_from.order_by(order_by)
+        if isinstance(order_by, list):
+            return origins.order_by(*order_by)
+
+        return origins.order_by(order_by)
 
     def get_origin_names(self):
         origins = ""
@@ -493,7 +495,11 @@ class Person(TimeStampedModel):
             properties["gender"] = self.gender.title
 
         prev_place = None
-        origins = self.get_origins()
+        origins = (
+            self.get_origins()
+            .exclude(place__lat__isnull=True)
+            .exclude(place__lon__isnull=True)
+        )
         for idx, origin in enumerate(origins):
             if idx == 0 or idx == origins.count() - 1:
                 pos = "first" if idx == 0 else "last"
