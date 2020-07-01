@@ -41,6 +41,58 @@ command::
 
 .. _django-extensions graph_models: https://django-extensions.readthedocs.io/en/latest/graph_models.html
 
+Below is an example of how the model is used to record information on one deed (Etat Civil Ismaïlia 1872-1882).
+
+- Deed:
+
+  - ID: 1; acttype: 1; n: 21; date: 24 déc. 1872; place: 1; source: 1
+  
+- Person:
+
+  - ID: JMS; name: Joseph Marius Silvy; year of birth: 1842
+  - ID: TB; name: Thérèse Blaum; year of birth: 1848
+
+- Party:
+
+  - Deed: 1; person: JMS; role: 2; profession: 2
+  - Deed: 1; person: TB; role: 1; profession: 1
+
+- Origin:
+
+  - Person: JMS; place: 2; originype: 1
+  - Person: TB; place: 3; origintype: 2
+  
+- DeedType:
+
+  - 1: Birth
+  - 2: Death
+  - 3: Marriage
+  
+- Place:
+
+  - 1: Ismaïlia; Egypt
+  - 2: Département de la Haute-Garonne; Saint-Marcel; France
+  - 3: Département des Pyrénées-Orientales; Collioure; France
+
+- OriginType:
+
+  - 1: Birth
+  - 2: Origin
+
+- Profession:
+  - 1: Sans profession
+  - 2: Mécanicien
+  
+- Role:
+
+  - 1: Mother
+  - 2: Father
+  
+- Source:
+
+  - 1: Classmark: Ismaïlia 1; microfilm: P 07070
+  - 2: Classmark: Le Caire 1; microfilm: P 06505
+
 Workflows
 ^^^^^^^^^
 
