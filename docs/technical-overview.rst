@@ -96,7 +96,11 @@ Below is an example of how the model is used to record information on one deed (
 Workflows
 ^^^^^^^^^
 
-TODO: data processing & editorial workflows
+.. figure:: _images/data-workflow.png
+    :align: center
+    :alt: Data workflow
+    :figclass: align-center
+    :width: 100%
 
 Architecture
 ^^^^^^^^^^^^
