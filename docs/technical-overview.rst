@@ -129,9 +129,9 @@ The project makes uses of two existing tools to generate map visualisations:
 - Kepler.gl_ is an open source geospatial analysis tool for large-scale data sets
 - Flowmap_ is a more minimal solution to create geographic flow maps from data published (not private) in Google Sheets. It allows to visualize numbers of movements between locations (origin-destination data) and explore the data interactively; however on a limited number of parameters (from, to and count). See the Flowmap version_ based on Etat Civil data.
 
+Description of this proof of concept with historical introduction are available on the Harvard Harvard and Cambridge Centre for History and Economics Visualising Historical Networks project webpages (TOADD specific link: https://histecon.fas.harvard.edu/visualizing/index.html).
+
 .. _Kepler.gl: https://kepler.gl/
-
 .. _Flowmap: https://flowmap.blue/
-
 .. _version: https://flowmap.blue/1hsU13EUFyX8m9xp7GYGGEMyC1bZ8_9sU6b4e2KHwVSc?v=36.754487,19.319729,2.02,0,0&a=1&b=1&bo=88&c=0&d=0&lt=1&lfm=ALL&col=SunsetDark&f=35 
 
