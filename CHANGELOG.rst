@@ -20,7 +20,7 @@ Fixed
 
 Added
 ~~~~~
-* Text under data model, workflow and design process
+* Text under data model, workflow, architecture and design process
 * Image under workflow
 
 
