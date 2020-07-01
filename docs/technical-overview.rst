@@ -95,6 +95,7 @@ Below is an example of how the model is used to record information on one deed (
 
 Workflows
 ^^^^^^^^^
+The Django app imports data from the the CSV files (derived from Google sheet), adds geographic locations to places, and provides an admin interface to manage the data (with simple filtering). After the curation and cleaning up is done in the Django admin, the app exports data into GeoJSON format to support map visualisations.
 
 .. figure:: _images/data-workflow.png
     :align: center
