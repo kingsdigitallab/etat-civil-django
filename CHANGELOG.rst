@@ -11,17 +11,21 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+[Unreleased] - 2020-07-02
+--------------------
+
+Added
+~~~~~
+* Text under data model, workflow, architecture and design process.
+* Image under workflow.
+
+
 [0.4.1] - 2020-05-13
 --------------------
 
 Fixed
 ~~~~~
 * Export to GeoJSON.
-
-Added
-~~~~~
-* Text under data model, workflow, architecture and design process.
-* Image under workflow.
 
 
 [0.4.0] - 2020-04-20
