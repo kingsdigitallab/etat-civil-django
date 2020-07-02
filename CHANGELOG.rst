@@ -18,6 +18,11 @@ Fixed
 ~~~~~
 * Export to GeoJSON.
 
+Added
+~~~~~
+* Text under data model, workflow, architecture and design process.
+* Image under workflow.
+
 
 [0.4.0] - 2020-04-20
 --------------------
