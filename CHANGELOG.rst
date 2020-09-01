@@ -14,6 +14,12 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 [Unreleased] - yyyy-mm-dd
 --------------------
 
+Added
+~~~~~
+* Kepler_ map.
+
+.. _Kepler: https://kepler.gl
+
 
 [0.5.0] - 2020-07-02
 --------------------
